@@ -19,7 +19,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Protocol, runtime_checkable
 
-from core.skill_result import Capability, Support
+from .contracts import TextCapability, TextSupport
 
 from .textio import StructuralCode, TextDocument, read_text_bytes
 
@@ -39,49 +39,49 @@ TEXT_MEDIA_TYPES = (
 
 #: A text backend reads UTF-8 bytes and reports legal structure. Read-only.
 _TEXT_CAPABILITIES = (
-    Capability(
+    TextCapability(
         name="utf8_text_read",
-        support=Support.SUPPORTED,
+        support=TextSupport.SUPPORTED,
         detail="UTF-8 decoding with exact character, byte and line offsets",
     ),
-    Capability(
+    TextCapability(
         name="encoding_detection",
-        support=Support.UNSUPPORTED,
+        support=TextSupport.UNSUPPORTED,
         detail="only UTF-8 is decoded; a BOM-less legacy encoding is reported as "
                "an encoding failure rather than guessed at",
     ),
-    Capability(
+    TextCapability(
         name="article_marker_detection",
-        support=Support.SUPPORTED,
+        support=TextSupport.SUPPORTED,
         detail="numbered Chinese legal markers: 第X条 (article) and 第X章 (chapter), "
                "including 〇零一二三四五六七八九十百 numerals",
     ),
-    Capability(
+    TextCapability(
         name="latin_numbered_headings",
-        support=Support.UNSUPPORTED,
+        support=TextSupport.UNSUPPORTED,
         detail="'Article N' style headings are outside this Skill's scope and are "
                "reported as an unsupported structure",
     ),
-    Capability(
+    TextCapability(
         name="paragraph_split",
-        support=Support.PARTIAL,
+        support=TextSupport.PARTIAL,
         detail="paragraphs are split on blank lines within an article; a "
                "single-paragraph article reflowed without blank lines is one "
                "paragraph",
     ),
-    Capability(
+    TextCapability(
         name="exact_span_location",
-        support=Support.SUPPORTED,
+        support=TextSupport.SUPPORTED,
         detail="character, byte and line spans computed from the artifact bytes",
     ),
-    Capability(
+    TextCapability(
         name="scanned_or_image_text",
-        support=Support.UNSUPPORTED,
+        support=TextSupport.UNSUPPORTED,
         detail="no OCR; an image or PDF artifact is not text and is refused",
     ),
-    Capability(
+    TextCapability(
         name="retrieval_or_ranking",
-        support=Support.UNSUPPORTED,
+        support=TextSupport.UNSUPPORTED,
         detail="no retrieval, ranking, similarity or fuzzy matching exists in this "
                "Skill by design",
     ),
@@ -102,7 +102,7 @@ class TextBackend(Protocol):
     def is_available(self) -> bool:
         ...
 
-    def capabilities(self) -> tuple[Capability, ...]:
+    def capabilities(self) -> tuple[TextCapability, ...]:
         ...
 
     def load(self, path: str, options: Mapping[str, Any] | None = None) -> TextDocument:
@@ -126,7 +126,7 @@ class FixtureTextBackend:
     def is_available(self) -> bool:
         return True
 
-    def capabilities(self) -> tuple[Capability, ...]:
+    def capabilities(self) -> tuple[TextCapability, ...]:
         return _TEXT_CAPABILITIES
 
     def load(self, path: str, options: Mapping[str, Any] | None = None) -> TextDocument:
@@ -179,7 +179,7 @@ class FakeTextBackend:
     def is_available(self) -> bool:
         return self.available
 
-    def capabilities(self) -> tuple[Capability, ...]:
+    def capabilities(self) -> tuple[TextCapability, ...]:
         return _TEXT_CAPABILITIES
 
     def load(self, path: str, options: Mapping[str, Any] | None = None) -> TextDocument:

@@ -32,8 +32,8 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
 import _bootstrap  # noqa: E402
 
-from core.artifact import Artifact, digest_bytes  # noqa: E402
-from core.evidence import UnitClass  # noqa: E402
+from skills.shanhai.contracts import TextArtifact, text_digest_bytes  # noqa: E402
+from skills.shanhai.contracts import TextUnitClass  # noqa: E402
 from skills.shanhai import (  # noqa: E402
     DEFAULT_OPTIONS,
     FixtureTextBackend,
@@ -53,8 +53,8 @@ from fixtures.shanhai import build_text_fixtures as fixtures  # noqa: E402
 SOURCE_ID = "src-integrity"
 
 
-def artifact_for(case: str) -> Artifact:
-    return Artifact.from_file(fixtures.case_path(case), f"art-{case}")
+def artifact_for(case: str) -> TextArtifact:
+    return TextArtifact.from_file(fixtures.case_path(case), f"art-{case}")
 
 
 def run_case(case: str, **options):
@@ -81,9 +81,9 @@ class ArtifactIntegrityGateTests(unittest.TestCase):
         raw = path.read_bytes()
         # A digest of *different* bytes: the file on disk is not what was
         # registered. The Skill must refuse rather than read it anyway.
-        artifact = Artifact(
+        artifact = TextArtifact(
             artifact_id="art-wrong-digest",
-            digest=digest_bytes(raw + b"padding"),
+            digest=text_digest_bytes(raw + b"padding"),
             media_type="text/plain",
             byte_length=len(raw),
             location=str(path),
@@ -108,9 +108,9 @@ class ArtifactIntegrityGateTests(unittest.TestCase):
         """Attributable: a caller can see which digest was expected and observed."""
         path = fixtures.case_path("normal")
         raw = path.read_bytes()
-        recorded = digest_bytes(raw + b"padding")
-        observed = digest_bytes(raw)
-        artifact = Artifact(
+        recorded = text_digest_bytes(raw + b"padding")
+        observed = text_digest_bytes(raw)
+        artifact = TextArtifact(
             artifact_id="art-wrong-digest",
             digest=recorded,
             media_type="text/plain",
@@ -128,9 +128,9 @@ class ArtifactIntegrityGateTests(unittest.TestCase):
         """The defect: units were emitted carrying a digest never true of the read."""
         path = fixtures.case_path("normal")
         raw = path.read_bytes()
-        artifact = Artifact(
+        artifact = TextArtifact(
             artifact_id="art-wrong-digest",
-            digest=digest_bytes(raw + b"padding"),
+            digest=text_digest_bytes(raw + b"padding"),
             media_type="text/plain",
             byte_length=len(raw),
             location=str(path),
@@ -145,7 +145,7 @@ class ArtifactIntegrityGateTests(unittest.TestCase):
         )
 
     def test_an_unreadable_artifact_fails_closed(self) -> None:
-        artifact = Artifact(
+        artifact = TextArtifact(
             artifact_id="art-missing-file",
             digest="0" * 64,
             media_type="text/plain",
@@ -472,7 +472,7 @@ class DuplicateHandleTests(unittest.TestCase):
         """The same defect class applies to chapter containers."""
         result = run_case("normal")
         container_ids = [
-            u.unit_id for u in result.units if u.unit_class == UnitClass.CONTAINER
+            u.unit_id for u in result.units if u.unit_class == TextUnitClass.CONTAINER
         ]
         self.assertEqual(len(container_ids), len(set(container_ids)))
 

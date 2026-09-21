@@ -12,20 +12,20 @@ Pipeline position
 -----------------
 ::
 
-    registered text Artifact
+    registered text TextArtifact
             |
         ShanHai Skill          (this module)
             |
-        SkillResult
+        TextRunResult
             |
-        EvidenceUnit[]         (article and chapter units)
+        TextEvidenceUnit[]         (article and chapter units)
             |
         text citation reconstruction   (skills/shanhai/citation.py)
 
 Where text-specific information lives
 -------------------------------------
 Core is sealed. It records a coordinate-system *name*, a container reference and
-an opaque context path on ``CitationAddress``, and nothing modality-specific.
+an opaque context path on ``TextCitationAddress``, and nothing modality-specific.
 Everything text-shaped therefore lives in this Skill's payload:
 
 * character / byte / line spans,
@@ -57,20 +57,20 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any, Mapping, Sequence
 
-from core.artifact import Artifact, digest_bytes
-from core.evidence import (
-    CitationAddress,
-    EvidenceUnit,
-    LossKind,
-    ProducerRef,
-    UnitClass,
+from .contracts import TextArtifact, text_digest_bytes
+from .contracts import (
+    TextCitationAddress,
+    TextEvidenceUnit,
+    TextLossKind,
+    TextProducer,
+    TextUnitClass,
 )
-from core.skill_result import (
-    Capability,
-    RunDiagnostics,
-    Skill,
-    SkillResult,
-    Support,
+from .contracts import (
+    TextCapability,
+    TextEvidenceSkill,
+    TextRunDiagnostics,
+    TextRunResult,
+    TextSupport,
 )
 
 from .backends import TEXT_MEDIA_TYPES, FixtureTextBackend, TextBackend
@@ -107,52 +107,52 @@ DEFAULT_OPTIONS: Mapping[str, Any] = {
     "emit_chapter_units": True,
 }
 
-_SKILL_CAPABILITIES: tuple[Capability, ...] = (
-    Capability(
+_SKILL_CAPABILITIES: tuple[TextCapability, ...] = (
+    TextCapability(
         name="legal_text_evidence_units",
-        support=Support.SUPPORTED,
-        detail="one EvidenceUnit per detected article, plus container units for "
+        support=TextSupport.SUPPORTED,
+        detail="one TextEvidenceUnit per detected article, plus container units for "
                "chapters or, when nothing was detected, for the document",
     ),
-    Capability(
+    TextCapability(
         name="structural_diagnostics",
-        support=Support.SUPPORTED,
+        support=TextSupport.SUPPORTED,
         detail="empty_artifact, unsupported_structure, missing_marker, "
                "malformed_marker, numbering_gap and duplicate_marker are kept "
                "distinct and never conflated",
     ),
-    Capability(
+    TextCapability(
         name="exact_span_location",
-        support=Support.SUPPORTED,
+        support=TextSupport.SUPPORTED,
         detail="character, UTF-8 byte and 1-based line spans recorded per "
                "provision, computed from the artifact bytes",
     ),
-    Capability(
+    TextCapability(
         name="text_citation_reconstruction",
-        support=Support.SUPPORTED,
+        support=TextSupport.SUPPORTED,
         detail="an article, a paragraph or a character span rebuilds to an exact, "
                "verifiable text location; duplicates return ambiguity",
     ),
-    Capability(
+    TextCapability(
         name="paragraph_split",
-        support=Support.PARTIAL,
+        support=TextSupport.PARTIAL,
         detail="paragraphs are blank-line separated blocks inside an article",
     ),
-    Capability(
+    TextCapability(
         name="retrieval_or_ranking",
-        support=Support.UNSUPPORTED,
+        support=TextSupport.UNSUPPORTED,
         detail="no retrieval, ranking, FTS, similarity or fuzzy matching exists "
                "in this Skill by design",
     ),
-    Capability(
+    TextCapability(
         name="ocr_and_non_text",
-        support=Support.UNSUPPORTED,
+        support=TextSupport.UNSUPPORTED,
         detail="only UTF-8 text is read; images, PDFs and binary formats are not "
                "text artifacts",
     ),
-    Capability(
+    TextCapability(
         name="legal_authority",
-        support=Support.UNSUPPORTED,
+        support=TextSupport.UNSUPPORTED,
         detail="this Skill records where text is; it makes no claim about whether "
                "the text is authoritative, current or legally effective",
     ),
@@ -168,7 +168,7 @@ class _BackendChoice:
     backend: TextBackend
 
 
-class ShanHaiLegalTextEvidence(Skill):
+class ShanHaiLegalTextEvidence(TextEvidenceSkill):
     """Extract provisional EvidenceUnits from a UTF-8 legal text artifact.
 
     Parameters
@@ -196,7 +196,7 @@ class ShanHaiLegalTextEvidence(Skill):
 
     # -- capability ------------------------------------------------------
 
-    def capabilities(self) -> tuple[Capability, ...]:
+    def capabilities(self) -> tuple[TextCapability, ...]:
         caps = list(_SKILL_CAPABILITIES)
         seen: set[tuple[str, str]] = set()
         for backend in self._candidate_backends({}):
@@ -206,7 +206,7 @@ class ShanHaiLegalTextEvidence(Skill):
                     continue
                 seen.add(key)
                 caps.append(
-                    Capability(
+                    TextCapability(
                         name=f"{backend.backend_id}:{capability.name}",
                         support=capability.support,
                         detail=capability.detail,
@@ -219,18 +219,18 @@ class ShanHaiLegalTextEvidence(Skill):
 
     def run(
         self,
-        artifact: Artifact,
+        artifact: TextArtifact,
         *,
         source_id: str | None = None,
         options: Mapping[str, Any] | None = None,
         source: Any = None,
-    ) -> SkillResult:
+    ) -> TextRunResult:
         resolved_source_id = source_id or getattr(source, "source_id", None)
         run_id = f"run-{uuid.uuid4().hex[:12]}"
         started_at = _utc_now()
         merged = {**self._defaults, **dict(options or {})}
-        diagnostics = RunDiagnostics(options_echo=dict(options or {}))
-        producer = ProducerRef(
+        diagnostics = TextRunDiagnostics(options_echo=dict(options or {}))
+        producer = TextProducer(
             skill_id=self.skill_id,
             skill_version=self.skill_version,
             run_id=run_id,
@@ -358,7 +358,7 @@ class ShanHaiLegalTextEvidence(Skill):
         )
 
     @staticmethod
-    def _verify_artifact_bytes(artifact: Artifact, path: str) -> str | None:
+    def _verify_artifact_bytes(artifact: TextArtifact, path: str) -> str | None:
         """Re-read the artifact and compare it with the recorded digest.
 
         Returns a problem description, or ``None`` when the bytes match. The bytes
@@ -382,7 +382,7 @@ class ShanHaiLegalTextEvidence(Skill):
         return (
             f"artifact bytes do not match the recorded digest: expected "
             f"{artifact.content_digest}, observed "
-            f"{artifact.digest_algorithm}:{digest_bytes(payload, artifact.digest_algorithm)}. "
+            f"{artifact.digest_algorithm}:{text_digest_bytes(payload, artifact.digest_algorithm)}. "
             f"Nothing was extracted, because evidence bound to unverified bytes "
             f"cannot be cited."
         )
@@ -405,7 +405,7 @@ class ShanHaiLegalTextEvidence(Skill):
         return (FixtureTextBackend(),)
 
     def _select_backend(
-        self, options: Mapping[str, Any], diagnostics: RunDiagnostics
+        self, options: Mapping[str, Any], diagnostics: TextRunDiagnostics
     ) -> _BackendChoice:
         candidates = self._candidate_backends(options)
         diagnostics.considered_backends = [b.backend_id for b in candidates]
@@ -426,7 +426,7 @@ class ShanHaiLegalTextEvidence(Skill):
         backend: TextBackend,
         path: str,
         options: Mapping[str, Any],
-        diagnostics: RunDiagnostics,
+        diagnostics: TextRunDiagnostics,
     ) -> TextDocument:
         """Call ``backend.load`` and turn an exception into evidence.
 
@@ -447,7 +447,7 @@ class ShanHaiLegalTextEvidence(Skill):
             )
             return TextDocument(
                 text="",
-                loss=(LossKind.FAILED,),
+                loss=(TextLossKind.FAILED,),
                 errors=(f"backend_raised: {problem}",),
                 fatal=True,
                 backend_id=backend.backend_id,
@@ -458,9 +458,9 @@ class ShanHaiLegalTextEvidence(Skill):
     # -- evidence construction -------------------------------------------
 
     def _producer_for(
-        self, producer: ProducerRef, backend: TextBackend
-    ) -> ProducerRef:
-        return ProducerRef(
+        self, producer: TextProducer, backend: TextBackend
+    ) -> TextProducer:
+        return TextProducer(
             skill_id=producer.skill_id,
             skill_version=producer.skill_version,
             backend_id=backend.backend_id,
@@ -472,14 +472,14 @@ class ShanHaiLegalTextEvidence(Skill):
     def _build_units(
         self,
         *,
-        artifact: Artifact,
+        artifact: TextArtifact,
         source_id: str,
         document: TextDocument,
-        producer: ProducerRef,
+        producer: TextProducer,
         merged: Mapping[str, Any],
-        diagnostics: RunDiagnostics,
+        diagnostics: TextRunDiagnostics,
         backend: TextBackend,
-    ) -> tuple[EvidenceUnit, ...]:
+    ) -> tuple[TextEvidenceUnit, ...]:
         for code, detail in document.structural_findings:
             diagnostics.warn(f"structure:{code}", detail, scope=artifact.artifact_id)
         for warning in document.warnings:
@@ -511,7 +511,7 @@ class ShanHaiLegalTextEvidence(Skill):
         # distinct pieces of evidence and must not share an identity; the number
         # alone is a *label*, not a key. Citations still resolve by label and
         # return ambiguity, so uniqueness here never silently picks a winner.
-        units: list[EvidenceUnit] = []
+        units: list[TextEvidenceUnit] = []
         if merged.get("emit_chapter_units", True):
             for order, (number, marker, span) in enumerate(document.chapters, start=1):
                 units.append(
@@ -598,13 +598,13 @@ class ShanHaiLegalTextEvidence(Skill):
     def _provision_unit(
         self,
         *,
-        artifact: Artifact,
+        artifact: TextArtifact,
         source_id: str,
         document: TextDocument,
         provision: TextProvision,
         order: int,
-        producer: ProducerRef,
-    ) -> EvidenceUnit:
+        producer: TextProducer,
+    ) -> TextEvidenceUnit:
         # Loss is per-unit. A document-level condition elsewhere -- a numbering
         # gap, a duplicated marker, a malformed marker in another article -- is
         # reported on the document and in diagnostics, and it does NOT mark a
@@ -621,7 +621,7 @@ class ShanHaiLegalTextEvidence(Skill):
             # unit level than the document reports, which is the conflation this
             # vocabulary exists to prevent.
             code = provision.malformed_code or StructuralCode.MALFORMED_MARKER
-            loss.append(structural_loss_kind(code) or LossKind.FAILED)
+            loss.append(structural_loss_kind(code) or TextLossKind.FAILED)
 
         context = self._context_header(document)
         payload = self._text_payload(
@@ -635,16 +635,16 @@ class ShanHaiLegalTextEvidence(Skill):
         context_path.append(f"span:{provision.span.char_ref}")
 
         number_label = provision.number if provision.number > 0 else "unparsed"
-        return EvidenceUnit(
+        return TextEvidenceUnit(
             # ``order`` disambiguates repeated article numbers; ``number_label``
             # keeps the handle readable and stable for the ordinary case, where
             # order and label agree by construction.
             unit_id=f"{artifact.artifact_id}:article:{order}:{number_label}",
-            unit_class=UnitClass.CONTENT,
+            unit_class=TextUnitClass.CONTENT,
             source_id=source_id,
             artifact_id=artifact.artifact_id,
             producer=producer,
-            address=CitationAddress(
+            address=TextCitationAddress(
                 kind="content_location",
                 value=provision.provision_id,
                 container_id=f"article:{number_label}",
@@ -678,15 +678,15 @@ class ShanHaiLegalTextEvidence(Skill):
     def _chapter_unit(
         self,
         *,
-        artifact: Artifact,
+        artifact: TextArtifact,
         source_id: str,
         document: TextDocument,
         number: int,
         marker: str,
         span: Any,
         order: int,
-        producer: ProducerRef,
-    ) -> EvidenceUnit:
+        producer: TextProducer,
+    ) -> TextEvidenceUnit:
         members = [
             p.number for p in document.provisions if p.chapter_number == number
         ]
@@ -698,13 +698,13 @@ class ShanHaiLegalTextEvidence(Skill):
             "span": span.as_dict(),
             "article_numbers": members,
         }
-        return EvidenceUnit(
+        return TextEvidenceUnit(
             unit_id=f"{artifact.artifact_id}:chapter:{order}:{number}",
-            unit_class=UnitClass.CONTAINER,
+            unit_class=TextUnitClass.CONTAINER,
             source_id=source_id,
             artifact_id=artifact.artifact_id,
             producer=producer,
-            address=CitationAddress(
+            address=TextCitationAddress(
                 kind="container_location",
                 value=f"chapter:{number}",
                 container_id=f"chapter:{number}",
@@ -733,11 +733,11 @@ class ShanHaiLegalTextEvidence(Skill):
     def _document_unit(
         self,
         *,
-        artifact: Artifact,
+        artifact: TextArtifact,
         source_id: str,
         document: TextDocument,
-        producer: ProducerRef,
-    ) -> EvidenceUnit:
+        producer: TextProducer,
+    ) -> TextEvidenceUnit:
         """The single unit emitted when no provision could be detected.
 
         This is where ``empty_artifact``, ``unsupported_structure`` and
@@ -747,18 +747,18 @@ class ShanHaiLegalTextEvidence(Skill):
         codes = [code for code, _ in document.structural_findings]
         loss = list(document.loss)
         if not loss:
-            loss.append(LossKind.EMPTY)
+            loss.append(TextLossKind.EMPTY)
 
         context = self._context_header(document)
         payload = self._text_payload(document, [])
 
-        return EvidenceUnit(
+        return TextEvidenceUnit(
             unit_id=f"{artifact.artifact_id}:document",
-            unit_class=UnitClass.CONTAINER,
+            unit_class=TextUnitClass.CONTAINER,
             source_id=source_id,
             artifact_id=artifact.artifact_id,
             producer=producer,
-            address=CitationAddress(
+            address=TextCitationAddress(
                 kind="container_location",
                 value="document",
                 container_id="document",
@@ -786,8 +786,8 @@ class ShanHaiLegalTextEvidence(Skill):
         self,
         document: TextDocument,
         backend: TextBackend,
-        diagnostics: RunDiagnostics,
-        units: Sequence[EvidenceUnit],
+        diagnostics: TextRunDiagnostics,
+        units: Sequence[TextEvidenceUnit],
     ) -> None:
         diagnostics.backend_id = backend.backend_id
         diagnostics.backend_version = backend.backend_version
@@ -813,7 +813,7 @@ class ShanHaiLegalTextEvidence(Skill):
         # level, where it fails closed, so this method is only ever reached with
         # at least one unit.
         for capability in self.capabilities():
-            if capability.support in (Support.UNSUPPORTED, Support.PARTIAL):
+            if capability.support in (TextSupport.UNSUPPORTED, TextSupport.PARTIAL):
                 if capability.name not in diagnostics.unsupported_capabilities:
                     diagnostics.unsupported_capabilities.append(capability.name)
 
@@ -833,14 +833,14 @@ class ShanHaiLegalTextEvidence(Skill):
 
     def _finish(
         self,
-        artifact: Artifact,
-        producer: ProducerRef,
-        diagnostics: RunDiagnostics,
+        artifact: TextArtifact,
+        producer: TextProducer,
+        diagnostics: TextRunDiagnostics,
         run_id: str,
         started_at: str,
-        units: Sequence[EvidenceUnit],
-    ) -> SkillResult:
-        return SkillResult(
+        units: Sequence[TextEvidenceUnit],
+    ) -> TextRunResult:
+        return TextRunResult(
             artifact=artifact,
             skill_id=self.skill_id,
             producer=producer,

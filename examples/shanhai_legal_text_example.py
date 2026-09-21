@@ -26,8 +26,7 @@ PROJECT_ROOT = pathlib.Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from core.artifact import Artifact  # noqa: E402
-from core.source import SourceRegistry  # noqa: E402
+from skills.shanhai.contracts import TextArtifact  # noqa: E402
 from skills.shanhai import (  # noqa: E402
     FixtureTextBackend,
     ShanHaiLegalTextEvidence,
@@ -44,12 +43,12 @@ DUPLICATE_FIXTURE = (
 
 
 def main() -> int:
-    registry = SourceRegistry()
-    registry.register_source("example-maritime-code", label="Synthetic example text")
-    artifact = registry.register_artifact(
-        "example-maritime-code",
+    # The Skill takes its input directly: an artifact whose bytes it can
+    # re-verify. Source registration is a caller's concern, not the Skill's, so
+    # ShanHai needs no registry to be used on its own.
+    artifact = TextArtifact.from_file(
         FIXTURE,
-        artifact_id="example-maritime-code",
+        "example-maritime-code",
         media_type="text/plain",
     )
 
@@ -84,7 +83,7 @@ def main() -> int:
     print()
 
     print("refusal: a duplicated article marker cannot be cited")
-    duplicate_artifact = Artifact.from_file(DUPLICATE_FIXTURE, "example-duplicate")
+    duplicate_artifact = TextArtifact.from_file(DUPLICATE_FIXTURE, "example-duplicate")
     duplicate = skill.run(duplicate_artifact, source_id="example-maritime-code")
     duplicate_text = DUPLICATE_FIXTURE.read_text(encoding="utf-8")
     ambiguous = resolve_text_citation_across(

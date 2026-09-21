@@ -20,7 +20,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
 import _bootstrap  # noqa: E402
 
-from core.artifact import Artifact  # noqa: E402
+from skills.shanhai.contracts import TextArtifact  # noqa: E402
 from skills.shanhai import (  # noqa: E402
     FixtureTextBackend,
     ShanHaiLegalTextEvidence,
@@ -255,7 +255,7 @@ class EndToEndReproducibilityTests(unittest.TestCase):
         return payload
 
     def test_repeated_runs_produce_identical_output(self) -> None:
-        artifact = Artifact.from_file(fixtures.case_path("normal"), "art-normal")
+        artifact = TextArtifact.from_file(fixtures.case_path("normal"), "art-normal")
         skill = ShanHaiLegalTextEvidence(FixtureTextBackend())
         first = self._stable(skill.run(artifact, source_id="s").as_dict())
         second = self._stable(skill.run(artifact, source_id="s").as_dict())
@@ -265,7 +265,7 @@ class EndToEndReproducibilityTests(unittest.TestCase):
         skill = ShanHaiLegalTextEvidence(FixtureTextBackend())
         for case in fixtures.CASES:
             with self.subTest(case=case):
-                artifact = Artifact.from_file(
+                artifact = TextArtifact.from_file(
                     fixtures.case_path(case), f"art-{case}"
                 )
                 first = self._stable(skill.run(artifact, source_id="s").as_dict())

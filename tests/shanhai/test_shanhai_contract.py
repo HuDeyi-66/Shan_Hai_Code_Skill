@@ -3,8 +3,8 @@
 One named test per required capability, plus the prohibitions, so
 "it is implemented" is checkable by reading the test list.
 
-Required: registered text Artifact input, explicit Skill call, ``SkillResult``
-output over ``EvidenceUnit``, provision/article extraction, exact location,
+Required: registered text TextArtifact input, explicit Skill call, ``TextRunResult``
+output over ``TextEvidenceUnit``, provision/article extraction, exact location,
 extracted text, producer, provenance state.
 
 Prohibited: retrieval, ranking, FTS, RAG, embeddings, vector database, LLM QA,
@@ -26,15 +26,14 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
 import _bootstrap  # noqa: E402
 
-from core.artifact import Artifact  # noqa: E402
-from core.evidence import (  # noqa: E402
-    CitationAddress,
-    EvidenceUnit,
-    LossKind,
-    UnitClass,
+from skills.shanhai.contracts import TextArtifact, text_digest_bytes  # noqa: E402
+from skills.shanhai.contracts import (  # noqa: E402
+    TextCitationAddress,
+    TextEvidenceUnit,
+    TextLossKind,
+    TextUnitClass,
 )
-from core.skill_result import Skill, SkillResult, Support  # noqa: E402
-from core.source import SourceRegistry  # noqa: E402
+from skills.shanhai.contracts import TextEvidenceSkill, TextRunResult, TextSupport  # noqa: E402
 from skills.shanhai import (  # noqa: E402
     DEFAULT_OPTIONS,
     FakeTextBackend,
@@ -54,11 +53,11 @@ PROJECT_ROOT = pathlib.Path(__file__).resolve().parent.parent.parent
 SKILLS_ROOT = PROJECT_ROOT / "skills"
 
 
-def artifact_for(case: str, *, media_type: str | None = None) -> Artifact:
+def artifact_for(case: str, *, media_type: str | None = None) -> TextArtifact:
     path = fixtures.case_path(case)
     if media_type is None:
-        return Artifact.from_file(path, f"art-{case}")
-    return Artifact.from_file(path, f"art-{case}", media_type=media_type)
+        return TextArtifact.from_file(path, f"art-{case}")
+    return TextArtifact.from_file(path, f"art-{case}", media_type=media_type)
 
 
 def run_case(case: str, **options):
@@ -71,13 +70,11 @@ def content_units(result):
 
 
 class Capability_1_InputTests(unittest.TestCase):
-    """Required: a registered UTF-8 text/plain Artifact, read-only and offline."""
+    """Required: a registered UTF-8 text/plain TextArtifact, read-only and offline."""
 
     def test_a_registered_text_artifact_is_accepted(self) -> None:
-        registry = SourceRegistry()
-        registry.register_source("src-shanhai", label="Legal text fixture")
-        artifact = registry.register_artifact(
-            "src-shanhai", fixtures.case_path("normal"), media_type="text/plain"
+        artifact = TextArtifact.from_file(
+            fixtures.case_path("normal"), "src-shanhai", media_type="text/plain"
         )
         result = ShanHaiLegalTextEvidence(FixtureTextBackend()).run(
             artifact, source_id="src-shanhai"
@@ -93,7 +90,23 @@ class Capability_1_InputTests(unittest.TestCase):
         self.assertNotIn("media_type_not_text", codes)
 
     def test_an_undeclared_media_type_is_warned_about(self) -> None:
-        result = run_case("normal")
+        """A caller who declares nothing gets ``application/octet-stream``.
+
+        ShanHai knows that ``.txt`` is ``text/plain``, so the undeclared case has
+        to be constructed rather than implied by an extension the media-type
+        table happens not to carry. Declaring nothing must not be read as
+        declaring text.
+        """
+        path = fixtures.case_path("normal")
+        artifact = TextArtifact(
+            artifact_id="art-undeclared",
+            digest=text_digest_bytes(path.read_bytes()),
+            byte_length=path.stat().st_size,
+            location=str(path),
+        )
+        result = ShanHaiLegalTextEvidence(FixtureTextBackend()).run(
+            artifact, source_id="src-shanhai"
+        )
         codes = {w.code for w in result.diagnostics.warnings}
         self.assertIn("media_type_not_text", codes)
 
@@ -122,10 +135,10 @@ class Capability_1_InputTests(unittest.TestCase):
 
 
 class Capability_2_SkillBoundaryTests(unittest.TestCase):
-    """Required: an explicit Skill call producing SkillResult over EvidenceUnit."""
+    """Required: an explicit Skill call producing TextRunResult over TextEvidenceUnit."""
 
     def test_the_skill_is_a_core_skill(self) -> None:
-        self.assertIsInstance(ShanHaiLegalTextEvidence(FixtureTextBackend()), Skill)
+        self.assertIsInstance(ShanHaiLegalTextEvidence(FixtureTextBackend()), TextEvidenceSkill)
 
     def test_skill_identity_is_reported(self) -> None:
         result = run_case("normal")
@@ -135,9 +148,9 @@ class Capability_2_SkillBoundaryTests(unittest.TestCase):
 
     def test_output_is_a_skill_result_over_evidence_units(self) -> None:
         result = run_case("normal")
-        self.assertIsInstance(result, SkillResult)
+        self.assertIsInstance(result, TextRunResult)
         self.assertTrue(result.units)
-        self.assertTrue(all(isinstance(u, EvidenceUnit) for u in result.units))
+        self.assertTrue(all(isinstance(u, TextEvidenceUnit) for u in result.units))
 
     def test_backend_injection_is_explicit(self) -> None:
         document = TextDocument(text="", backend_id="fake.text")
@@ -188,13 +201,13 @@ class Capability_3_ExtractionTests(unittest.TestCase):
         self.assertEqual(len(content_units(self.result)), 5)
 
     def test_chapters_become_container_units(self) -> None:
-        containers = [u for u in self.result.units if u.unit_class == UnitClass.CONTAINER]
+        containers = [u for u in self.result.units if u.unit_class == TextUnitClass.CONTAINER]
         self.assertEqual(len(containers), 2)
         self.assertEqual(self.result.diagnostics.stats["chapter_count"], 2)
 
     def test_units_use_generic_core_classes_only(self) -> None:
         for unit in self.result.units:
-            self.assertIn(unit.unit_class, UnitClass.ALL)
+            self.assertIn(unit.unit_class, TextUnitClass.ALL)
 
     def test_each_unit_carries_source_artifact_and_producer(self) -> None:
         for unit in content_units(self.result):
@@ -258,7 +271,7 @@ class Capability_4_StructuralDiagnosticsTests(unittest.TestCase):
         self.assertFalse(result.diagnostics.stats["parsed"])
         self.assertFalse(result.is_complete_success)
         self.assertEqual(len(result.units), 1)
-        self.assertIn(LossKind.EMPTY, result.units[0].loss)
+        self.assertIn(TextLossKind.EMPTY, result.units[0].loss)
 
     def test_unsupported_structure_is_reported(self) -> None:
         result = run_case("unsupported_structure")
@@ -266,7 +279,7 @@ class Capability_4_StructuralDiagnosticsTests(unittest.TestCase):
             result.diagnostics.stats["structural_codes"],
             [StructuralCode.UNSUPPORTED_STRUCTURE],
         )
-        self.assertIn(LossKind.UNSUPPORTED, result.units[0].loss)
+        self.assertIn(TextLossKind.UNSUPPORTED, result.units[0].loss)
 
     def test_latin_headings_are_refused_rather_than_half_parsed(self) -> None:
         result = run_case("latin_headings")
@@ -342,7 +355,7 @@ class Capability_4_StructuralDiagnosticsTests(unittest.TestCase):
             result.diagnostics.stats["structural_codes"], [StructuralCode.ENCODING_FAILURE]
         )
         self.assertTrue(result.diagnostics.has_fatal_error)
-        self.assertIn(LossKind.FAILED, result.units[0].loss)
+        self.assertIn(TextLossKind.FAILED, result.units[0].loss)
 
     def test_zero_units_never_means_success(self) -> None:
         """Every non-parsing case must be visibly unsuccessful."""
@@ -392,7 +405,7 @@ class Capability_4_StructuralDiagnosticsTests(unittest.TestCase):
             with self.subTest(code=code):
                 kinds = loss_kinds_for([code])
                 self.assertEqual(len(kinds), 1)
-                self.assertIn(kinds[0], LossKind.ALL)
+                self.assertIn(kinds[0], TextLossKind.ALL)
 
     def test_worker_table_encoding_fixture_is_really_not_utf8(self) -> None:
         raw = fixtures.case_path("not_utf8").read_bytes()
@@ -413,8 +426,8 @@ class Capability_5_TextSpecificInformationStaysInTheSkillTests(unittest.TestCase
         ):
             with self.subTest(attribute=attribute):
                 self.assertFalse(
-                    hasattr(EvidenceUnit, attribute),
-                    f"EvidenceUnit must not expose {attribute!r}: text context is a "
+                    hasattr(TextEvidenceUnit, attribute),
+                    f"TextEvidenceUnit must not expose {attribute!r}: text context is a "
                     f"Skill-side convention, not a Core concept",
                 )
 
@@ -422,7 +435,7 @@ class Capability_5_TextSpecificInformationStaysInTheSkillTests(unittest.TestCase
         """Core records a coordinate-system name; the axes live in the payload."""
         import dataclasses
 
-        fields = {f.name for f in dataclasses.fields(CitationAddress)}
+        fields = {f.name for f in dataclasses.fields(TextCitationAddress)}
         self.assertEqual(
             fields,
             {"kind", "value", "container_id", "container_label", "context_path"},
@@ -435,7 +448,7 @@ class Capability_5_TextSpecificInformationStaysInTheSkillTests(unittest.TestCase
         for unit in content_units(result):
             self.assertEqual(unit.address.kind, "content_location")
         for unit in result.units:
-            if unit.unit_class == UnitClass.CONTAINER:
+            if unit.unit_class == TextUnitClass.CONTAINER:
                 self.assertEqual(unit.address.kind, "container_location")
 
     def test_provision_coordinates_live_in_the_skill_payload(self) -> None:
@@ -453,21 +466,52 @@ class Capability_5_TextSpecificInformationStaysInTheSkillTests(unittest.TestCase
         self.assertTrue(context["experimental"])
         self.assertTrue(context["unfrozen"])
 
-    def test_no_text_specific_type_was_added_to_core(self) -> None:
-        import core.evidence as core_evidence
+    def test_text_specific_types_live_in_this_skill_not_in_a_runtime(self) -> None:
+        """ShanHai keeps its own text concepts; it borrows none from a runtime.
 
-        for forbidden in (
+        This replaces an earlier check that asserted a shared Core had no
+        text-specific accessor. ShanHai is now independent: the text-shaped
+        vocabulary is *this package's*, so the check is that the contract is
+        self-contained and named for the domain.
+        """
+        from skills.shanhai import contracts as shanhai_contracts
+
+        for required in (
             "TextEvidenceUnit",
-            "LegalEvidenceCore",
-            "UniversalCitationModel",
-            "TextSpan",
-            "LegalProvision",
+            "TextCitationAddress",
+            "TextLossKind",
+            "TextUnitClass",
+            "TextEvidenceSkill",
+            "TextRunResult",
         ):
-            with self.subTest(name=forbidden):
-                self.assertFalse(
-                    hasattr(core_evidence, forbidden),
-                    f"{forbidden} would be a Core addition; the Skill must keep it",
+            with self.subTest(name=required):
+                self.assertTrue(
+                    hasattr(shanhai_contracts, required),
+                    f"ShanHai must own {required}",
                 )
+
+    def test_this_skill_does_not_import_a_private_runtime(self) -> None:
+        """No module in this package may import ``core`` or ``app``.
+
+        Checked by parsing the source rather than by importing, so the check
+        holds even on a module whose import would fail.
+        """
+        import ast
+
+        offenders = []
+        for path in sorted(SKILLS_ROOT.rglob("*.py")):
+            source = path.read_text(encoding="utf-8")
+            tree = ast.parse(source)
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Import):
+                    for alias in node.names:
+                        if alias.name.split(".")[0] in ("core", "app"):
+                            offenders.append(f"{path.name}: import {alias.name}")
+                elif isinstance(node, ast.ImportFrom):
+                    root = (node.module or "").split(".")[0]
+                    if not node.level and root in ("core", "app"):
+                        offenders.append(f"{path.name}: from {node.module} import ...")
+        self.assertEqual(offenders, [], f"ShanHai must be self-contained; found {offenders}")
 
 
 class ProhibitionTests(unittest.TestCase):

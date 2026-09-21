@@ -27,7 +27,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
 import _bootstrap  # noqa: E402
 
-from core.artifact import Artifact  # noqa: E402
+from skills.shanhai.contracts import TextArtifact  # noqa: E402
 from skills.shanhai import (  # noqa: E402
     FixtureTextBackend,
     ShanHaiLegalTextEvidence,
@@ -44,7 +44,7 @@ from fixtures.shanhai import build_text_fixtures as fixtures  # noqa: E402
 
 
 def run_case(case: str):
-    artifact = Artifact.from_file(fixtures.case_path(case), f"art-{case}")
+    artifact = TextArtifact.from_file(fixtures.case_path(case), f"art-{case}")
     skill = ShanHaiLegalTextEvidence(FixtureTextBackend())
     return artifact, skill.run(artifact, source_id="src-shanhai")
 

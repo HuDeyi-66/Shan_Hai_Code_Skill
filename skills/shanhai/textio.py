@@ -54,7 +54,7 @@ class StructuralCode:
     """The six structural conditions this Skill must keep distinct.
 
     These are ShanHai's own vocabulary. They are deliberately *not* added to
-    Core's ``LossKind``: Core is sealed and its vocabulary is generic. Each code
+    Core's ``TextLossKind``: Core is sealed and its vocabulary is generic. Each code
     maps onto Core loss kinds, and the precise code is recorded in the unit
     payload and in run diagnostics, so a consumer can recover the distinction
     without Core knowing the word "article".
@@ -94,7 +94,7 @@ class StructuralCode:
 
 STRUCTURAL_CODES = StructuralCode.ALL
 
-#: Structural code -> Core ``LossKind``. Recorded here so the mapping is visible
+#: Structural code -> Core ``TextLossKind``. Recorded here so the mapping is visible
 #: in one place rather than scattered through the Skill.
 _STRUCTURAL_TO_LOSS_KIND: dict[str, str] = {
     StructuralCode.EMPTY_ARTIFACT: "empty",
@@ -918,7 +918,7 @@ def read_text_bytes(
 
 
 def structural_loss_kind(code: str) -> str | None:
-    """The Core ``LossKind`` a structural code maps to, for tests and callers."""
+    """The Core ``TextLossKind`` a structural code maps to, for tests and callers."""
     return _STRUCTURAL_TO_LOSS_KIND.get(code)
 
 

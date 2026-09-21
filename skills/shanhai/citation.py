@@ -1,6 +1,6 @@
 """ShanHai text citation reconstruction.
 
-Rebuild an exact text location from an ``EvidenceUnit``, or refuse.
+Rebuild an exact text location from an ``TextEvidenceUnit``, or refuse.
 
 The rule inherited from the workbook Skill applies here unchanged: **no first
 match**. If a marker occurs more than once, a citation to it is not unique, and
@@ -26,7 +26,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Mapping, Sequence
 
-from core.evidence import EvidenceUnit
+from .contracts import TextEvidenceUnit
 
 from .textio import TextSpan
 
@@ -253,7 +253,7 @@ class TextCitationSelector:
 # --------------------------------------------------------------------------
 
 
-def unit_text_context(unit: EvidenceUnit) -> dict[str, Any] | None:
+def unit_text_context(unit: TextEvidenceUnit) -> dict[str, Any] | None:
     """The *generic* ShanHai context attached to a unit, or ``None``.
 
     Read from the unit's generic ``metadata``. Core carries no text accessor --
@@ -263,7 +263,7 @@ def unit_text_context(unit: EvidenceUnit) -> dict[str, Any] | None:
     return dict(context) if isinstance(context, Mapping) else None
 
 
-def unit_text_provisions(unit: EvidenceUnit) -> tuple[Mapping[str, Any], ...]:
+def unit_text_provisions(unit: TextEvidenceUnit) -> tuple[Mapping[str, Any], ...]:
     """The provision records a unit carries, as written by the Skill.
 
     These live in ``unit.payload["shanhai"]["provisions"]``: the coordinate axes,
@@ -280,10 +280,10 @@ def unit_text_provisions(unit: EvidenceUnit) -> tuple[Mapping[str, Any], ...]:
 
 
 def iter_provisions(
-    units: Sequence[EvidenceUnit],
-) -> tuple[tuple[EvidenceUnit, Mapping[str, Any]], ...]:
+    units: Sequence[TextEvidenceUnit],
+) -> tuple[tuple[TextEvidenceUnit, Mapping[str, Any]], ...]:
     """Every ``(unit, provision)`` pair across a set of units, in unit order."""
-    pairs: list[tuple[EvidenceUnit, Mapping[str, Any]]] = []
+    pairs: list[tuple[TextEvidenceUnit, Mapping[str, Any]]] = []
     for unit in units:
         for provision in unit_text_provisions(unit):
             pairs.append((unit, provision))
@@ -291,7 +291,7 @@ def iter_provisions(
 
 
 def resolve_text_citation_across(
-    units: Sequence[EvidenceUnit],
+    units: Sequence[TextEvidenceUnit],
     selector: TextCitationSelector,
     *,
     document_text: str | None = None,
@@ -313,7 +313,7 @@ def resolve_text_citation_across(
             message=problem,
         )
 
-    candidates: list[tuple[EvidenceUnit, TextCandidate]] = []
+    candidates: list[tuple[TextEvidenceUnit, TextCandidate]] = []
     unresolved: list[TextUnresolved] = []
     for unit in units:
         outcome = resolve_text_citation(
@@ -365,7 +365,7 @@ def resolve_text_citation_across(
     return resolve_text_citation(unit, selector, document_text=document_text)
 
 
-def blocked_by_loss(unit: EvidenceUnit) -> str | None:
+def blocked_by_loss(unit: TextEvidenceUnit) -> str | None:
     """Why this unit cannot be cited at all, or ``None``.
 
     A unit that failed outright, or whose structure is unsupported, is not
@@ -423,7 +423,7 @@ def _span_from_dict(payload: Mapping[str, Any]) -> TextSpan:
 
 
 def _candidate_for(
-    unit: EvidenceUnit,
+    unit: TextEvidenceUnit,
     provision: Mapping[str, Any],
     selector: TextCitationSelector,
 ) -> TextCandidate | None:
@@ -467,7 +467,7 @@ def _paragraph_span(
 
 
 def resolve_text_citation(
-    unit: EvidenceUnit,
+    unit: TextEvidenceUnit,
     selector: TextCitationSelector,
     *,
     document_text: str | None = None,
@@ -619,7 +619,7 @@ def _span_for_chars(provision: Mapping[str, Any], start: int, end: int) -> TextS
 
 
 def _build(
-    unit: EvidenceUnit,
+    unit: TextEvidenceUnit,
     provision: Mapping[str, Any],
     span: TextSpan,
     selector: TextCitationSelector,
