@@ -29,6 +29,10 @@
 
 ---
 
+<p align="center">
+  <img src="docs/assets/shanhai-comic.png" alt="ShanHai（海珊）能力与边界示意" />
+</p>
+
 ## 能力范围
 
 下表为 Skill 在运行时声明能力，未列出的能力即未实现。

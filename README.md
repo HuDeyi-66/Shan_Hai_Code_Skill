@@ -27,6 +27,10 @@ document's structure is reported as a typed diagnostic.
 
 ---
 
+<p align="center">
+  <img src="docs/assets/shanhai-comic.png" alt="ShanHai（海珊）Skill comic" />
+</p>
+
 ## Capabilities
 
 These are the capabilities the Skill declares at runtime. Anything not listed is
