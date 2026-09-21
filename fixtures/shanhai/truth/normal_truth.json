@@ -1,0 +1,80 @@
+{
+  "article_numbers": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "articles": [
+    {
+      "char_end": 78,
+      "char_start": 24,
+      "line_end": 6,
+      "line_start": 5,
+      "marker": "第一条",
+      "number": 1,
+      "text": "第一条 为了调整海上运输关系、船舶关系，维护当事人各方的合法权益，\n促进海上运输和经济贸易的发展，制定本法。",
+      "text_length": 54
+    },
+    {
+      "char_end": 168,
+      "char_start": 80,
+      "line_end": 10,
+      "line_start": 8,
+      "marker": "第二条",
+      "number": 2,
+      "text": "第二条 本法所称海上运输，是指海上货物运输和海上旅客运输，\n包括海江之间、江海之间的直达运输。\n本法第四章海上货物运输合同的规定，不适用于中华人民共和国港口之间的海上货物运输。",
+      "text_length": 88
+    },
+    {
+      "char_end": 251,
+      "char_start": 178,
+      "line_end": 17,
+      "line_start": 14,
+      "marker": "第三条",
+      "number": 3,
+      "text": "第三条 本法所称船舶，是指海船和其他海上移动式装置，\n但是用于军事的、政府公务的船舶和二十总吨以下的小型船艇除外。\n\n前款所称船舶，包括船舶属具。",
+      "text_length": 73
+    },
+    {
+      "char_end": 277,
+      "char_start": 253,
+      "line_end": 19,
+      "line_start": 19,
+      "marker": "第四条",
+      "number": 4,
+      "text": "第四条 船舶经依法登记，取得中华人民共和国国籍。",
+      "text_length": 24
+    },
+    {
+      "char_end": 310,
+      "char_start": 279,
+      "line_end": 21,
+      "line_start": 21,
+      "marker": "第五条",
+      "number": 5,
+      "text": "第五条 船舶所有权的取得、转让和消灭，应当向船舶登记机关登记。",
+      "text_length": 31
+    }
+  ],
+  "chapter_count": 2,
+  "expected_citations": {
+    "article_1": {
+      "number": 1,
+      "ref": "第一条"
+    },
+    "article_5": {
+      "number": 5,
+      "ref": "第五条"
+    },
+    "chapter_2_article_3": {
+      "chapter": 2,
+      "number": 3
+    }
+  },
+  "fixture": "normal.txt",
+  "fixture_sha256": "91cf81125e52da9b9aa6a9cb3f325ad2ec57ead29b590a6d3a0e37dd0a21bc85",
+  "schema_version": "seaflow-v2.3-shanhai-truth/v1",
+  "title": "中华人民共和国海商法（节选）"
+}

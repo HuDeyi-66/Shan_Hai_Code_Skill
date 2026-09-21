@@ -1,0 +1,85 @@
+{
+  "cases": {
+    "duplicate_marker": {
+      "bytes": 176,
+      "condition": "duplicate_marker",
+      "expectation": "both article 2 occurrences produce units; a citation to article 2 returns ambiguous listing both",
+      "file": "duplicate_marker.txt",
+      "sha256": "9aee23c7983767e9d575be2075acf743b6a8778d6880857e08c39cfe9a818ac3"
+    },
+    "empty": {
+      "bytes": 0,
+      "condition": "empty_artifact",
+      "expectation": "one container unit, loss 'empty', parsed=False; never a success and never 'validated'",
+      "file": "empty.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "gap": {
+      "bytes": 104,
+      "condition": "numbering_gap",
+      "expectation": "articles 1, 2 and 5 detected; numbering_gap reported for 3 and 4, which are absent",
+      "file": "gap.txt",
+      "sha256": "908e6931b06a35448220673b0ea12511f4f0c1c338b9dae3431df0e0a5e7939f"
+    },
+    "latin_headings": {
+      "bytes": 156,
+      "condition": "unsupported_structure",
+      "expectation": "Latin 'Article N' headings are refused as unsupported rather than half-parsed",
+      "file": "latin_headings.txt",
+      "sha256": "1329b6423cea24b6031d985d6ba0d40715d786aa8b3f180e204f9693b65b5188"
+    },
+    "malformed_marker": {
+      "bytes": 119,
+      "condition": "malformed_marker",
+      "expectation": "the malformed marker is reported as malformed_marker, NOT as a numbering gap, and is not emitted as a citable article",
+      "file": "malformed_marker.txt",
+      "sha256": "6def1ab5da622eaa1750324d72e84c66379a49257eb16c3e611d0e6d6c4312d5"
+    },
+    "missing_marker": {
+      "bytes": 152,
+      "condition": "missing_marker",
+      "expectation": "a marker is present but its numeral is unresolvable; reported as missing_marker -- the marker's own text is read, and this is NOT reported as numbering_gap",
+      "file": "missing_marker.txt",
+      "sha256": "93c5731b40633006575373a9ae9ab5e33c5ffec6f3470a785c1284eac4ec25cc"
+    },
+    "normal": {
+      "bytes": 878,
+      "condition": "none",
+      "expectation": "chapters and articles are detected; articles carry exact character spans and paragraph splits",
+      "file": "normal.txt",
+      "sha256": "91cf81125e52da9b9aa6a9cb3f325ad2ec57ead29b590a6d3a0e37dd0a21bc85"
+    },
+    "not_utf8": {
+      "bytes": 6,
+      "condition": "encoding_failure",
+      "expectation": "decode failure is fatal and reported; the bytes are not lossily decoded",
+      "file": "not_utf8.txt",
+      "sha256": "ba24e00e350fe3ac17f06fbb1413faaf545ce644cf65e28e9a7904f2762e2acc"
+    },
+    "numbering_gap_no_marker": {
+      "bytes": 74,
+      "condition": "numbering_gap",
+      "expectation": "articles 1 and 3 with nothing marker-shaped between them: the expected article 2 is genuinely absent, reported as numbering_gap and NOT as missing_marker",
+      "file": "numbering_gap_no_marker.txt",
+      "sha256": "ce0aabc12e0a7071c8db76106d69bd62a459fd9cdec875290c9e6591c98b854f"
+    },
+    "unsupported_structure": {
+      "bytes": 224,
+      "condition": "unsupported_structure",
+      "expectation": "no provisions; one container unit with loss 'unsupported'",
+      "file": "unsupported_structure.txt",
+      "sha256": "46bd5b94ba20b6012c1b9a073eee62a575e74a6418eb5ef825b38bec145db315"
+    }
+  },
+  "component": "shanhai",
+  "determinism": {
+    "bom": false,
+    "encoding": "utf-8",
+    "expected_byte_identical_rebuild": true,
+    "newlines": "lf"
+  },
+  "fixture_root": "fixtures/shanhai/generated",
+  "generated_by": "fixtures/shanhai/build_text_fixtures.py",
+  "schema_version": "seaflow-shanhai-fixture-manifest/v1",
+  "truth": "normal_truth.json"
+}
