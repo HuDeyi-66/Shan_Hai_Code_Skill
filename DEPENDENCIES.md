@@ -5,31 +5,45 @@
 | Component | Classification | Required | Redistributed here |
 | --- | --- | --- | --- |
 | Python standard library | RUNTIME | yes | no (part of the interpreter) |
-| SeaFlow Core (`core/`) | RUNTIME, sibling repository | yes | **no** — obtained from the SeaFlow repository |
 
-ShanHai's runtime imports only the Python standard library and SeaFlow Core. It
-has no third-party runtime dependency, so there is no third-party notice to
-reproduce here. Core is deliberately **not** vendored: it has one authoritative
-implementation, in the SeaFlow repository.
+**That is the complete list.** ShanHai has no third-party runtime dependency and
+no dependency on any SeaFlow component. It does not import a private runtime, and
+it does not need one present in any form.
+
+Earlier revisions of this file recorded a dependency on a shared SeaFlow Core
+package. That dependency is gone: ShanHai now carries its own contract in
+`skills/shanhai/contracts.py`, which is the interface its own capability needs
+and nothing more.
 
 ## Test-only
 
 | Component | Classification | Required | Redistributed here |
 | --- | --- | --- | --- |
-| SeaFlow Core (`core/`) | TEST, supplied at run time | yes | **no** |
-| `python-calamine` | not used by ShanHai | no | no |
+| Python standard library (`unittest`) | TEST | yes | no |
 
-The locked `python-calamine` comparison binding is a LuoHai concern. ShanHai
-neither imports it nor asserts anything about it.
+No test in this repository requires an external checkout, an environment
+variable pointing outside the repository, or a network connection.
 
-## Explicit Core composition
+## Composition
 
-ShanHai never guesses where Core is. The suite requires one of:
+There is nothing to compose. A fresh clone is a complete, runnable Skill:
 
-* `--core-root <dir>` on `tests/run_all.py`, or
-* the `SEAFLOW_CORE_ROOT` environment variable pointing at a directory that
-  contains `core/` (normally a SeaFlow checkout root).
+```bash
+git clone https://github.com/HuDeyi-66/Shan_Hai_Code_Skill
+cd Shan_Hai_Code_Skill
+python tests/run_all.py --quiet
+```
 
-There is no sibling-directory fallback and no machine-specific path in this
-repository. If Core cannot be found, the suite fails immediately with an
-explicit message rather than silently skipping.
+The standalone-isolation suite enforces this: it fails if any module under
+`skills/` acquires an import of a private runtime, and it runs the entry point
+from a fresh interpreter whose path contains only this repository.
+
+## Licensing
+
+ShanHai-authored code is licensed under the MIT License with the notice
+`Copyright (c) 2026 Peng Wang (Hu Deyi)`; see `LICENSE`.
+
+No third-party component is bundled, so there is no third-party notice to
+reproduce. This license does not extend to the private SeaFlow base runtime,
+which is separately maintained; this repository makes no licensing statement
+about it.

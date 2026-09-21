@@ -1,105 +1,148 @@
-# ShanHai — Legal Text Evidence Skill
+# ShanHai — Legal Text Evidence
 
-ShanHai is the official SeaFlow Skill for **legal-text evidence**. It reads
-registered UTF-8 legal text, detects legal structure, emits evidence units with
-exact character / byte / line spans, reconstructs citations that can be
-re-checked against the artifact, and reports ambiguity or unsupported structure
-instead of guessing.
+ShanHai is an **independent open-source component** for extracting traceable
+evidence from legal text. It reads UTF-8 legal text, detects legal structure, and
+emits evidence units with exact character, byte and line spans. It reconstructs
+citations that can be re-checked against the artifact, and reports structural
+problems as distinct, inspectable outcomes instead of guessing.
 
-This repository is one of the three public SeaFlow repositories. It is a
-**sibling** Skill: it depends on SeaFlow Core and on nothing else in the
-SeaFlow family.
+Nothing is inferred silently: a value that was not read is reported as loss, a
+location that is not unique is reported as ambiguity, and a problem with the
+document's structure is reported as a typed diagnostic.
 
-| Repository | Role |
-| --- | --- |
-| [SeaFlow](https://github.com/HuDeyi-66/SeaFlow) | Core runtime and application integration |
-| **ShanHai** (this repository) | Legal-text evidence Skill |
-| [LuoHai](https://github.com/HuDeyi-66/Luo_Hai_Tables_Skill) | Tabular evidence Skill |
+**ShanHai needs nothing but itself.** It has no dependency on any SeaFlow
+component, does not import one, and does not require one to be present in any
+form. A SeaFlow runtime can integrate it as an official Skill, but that
+integration is implemented inside SeaFlow — see [Using it with
+SeaFlow](#using-it-with-seaflow).
 
 ---
 
-## What ShanHai owns
+## Install
 
-* `skills/shanhai/legal_text_extraction.py` — the Skill (`ShanHai.LegalTextEvidence`) and evidence-unit construction.
-* `skills/shanhai/textio.py` — decoding, character/byte/line spans, chapters, articles, paragraphs, structural diagnostics.
-* `skills/shanhai/citation.py` — exact text-citation reconstruction, ambiguity and refusal outcomes.
-* `skills/shanhai/backends.py` — explicit text-reader contracts and the deterministic fixture backend.
-* `fixtures/shanhai/` — deterministic legal-text fixtures, the case manifest and the truth record.
-* `tests/shanhai/` — the ShanHai contract, evidence-integrity, fixture and citation suites.
-* `examples/shanhai_legal_text_example.py` — offline, deterministic example.
-* `docs/LEGAL_TEXT_EVIDENCE.md` — the capability statement.
-
-## What ShanHai does not own
-
-* **Core is not vendored here.** `core/` (artifact identity and digest
-  verification, source registration, modality-neutral evidence units, the loss
-  vocabulary, the Skill result contract) has exactly one authoritative
-  implementation, in the SeaFlow repository. This repository depends on it and
-  never copies it.
-* **No LuoHai code, fixtures or imports.** ShanHai and LuoHai are siblings and
-  are mutually isolated; neither may import the other.
-* **No application orchestration.** Query planning, branch routing, evidence
-  composition, refusal policy and the Citation Packet belong to SeaFlow's `app/`
-  layer. ShanHai does not import it.
-* No legal authority finding, no retrieval or ranking, no models, no private
-  legal corpus.
-
-## Install and run
-
-ShanHai is standard-library only; there is no package to install. Core is
-supplied explicitly at test time — never by a hidden sibling-directory guess.
+Standard library only. There is no package to install and no service to start:
 
 ```bash
-git clone https://github.com/HuDeyi-66/SeaFlow        # the Core + runtime repository
-git clone https://github.com/HuDeyi-66/Shan_Hai_Code_Skill        # this repository
+git clone https://github.com/HuDeyi-66/Shan_Hai_Code_Skill
 cd Shan_Hai_Code_Skill
+python --version        # qualified on Windows with CPython 3.13.14
 ```
 
-Point the suite at the SeaFlow checkout root (the directory that contains
-`core/`), then run it:
+That is the whole installation.
 
-```bash
-python tests/run_all.py --core-root ../<seaflow-checkout> --quiet
-# or
-SEAFLOW_CORE_ROOT=../<seaflow-checkout> python tests/run_all.py --quiet
-```
+## Use it
 
-Run the example and the fixture determinism check:
-
-```bash
-SEAFLOW_CORE_ROOT=../<seaflow-checkout> python examples/shanhai_legal_text_example.py
-SEAFLOW_CORE_ROOT=../<seaflow-checkout> python fixtures/shanhai/build_text_fixtures.py
-```
-
-The public import name is stable:
+One function is the whole required surface:
 
 ```python
-from skills.shanhai import ShanHaiLegalTextEvidence, FixtureTextBackend
+from skills.shanhai import run_legal_text_evidence
+
+result = run_legal_text_evidence("statute.txt", source_id="statute")
+
+print(result.is_complete_success)          # False if anything was lost
+for unit in result.units:
+    print(unit.address.value, unit.loss)   # exact location, and what is missing
 ```
 
-## Verify
+`run_legal_text_evidence` accepts a path, raw bytes, or a `TextArtifact` you
+build yourself. It returns a `TextRunResult` carrying the evidence units, the
+run diagnostics, and an honest assessment of whether the read was complete.
 
-| Level | Command |
+Lower-level entry points are available if you want to drive the pieces:
+
+```python
+from skills.shanhai import ShanHaiLegalTextEvidence, TextArtifact, FixtureTextBackend
+
+artifact = TextArtifact.from_file("statute.txt", "statute")
+result = ShanHaiLegalTextEvidence(FixtureTextBackend()).run(
+    artifact, source_id="statute"
+)
+```
+
+### What comes back
+
+* one evidence unit per article, with character, UTF-8 byte and 1-based line
+  coordinates computed from the artifact bytes;
+* container units for chapters, and for a document that yielded no provisions;
+* structural diagnostics kept distinct: `empty_artifact`, `unsupported_structure`,
+  `missing_marker`, `malformed_marker`, `numbering_gap`, `duplicate_marker`,
+  `encoding_failure`;
+* citations rebuilt from an article, a paragraph or a character span, and
+  re-verified against the artifact text;
+* ambiguity as a result: a duplicated article marker returns every candidate and
+  selects none.
+
+### The contract
+
+The types ShanHai returns are **its own**, declared in
+`skills/shanhai/contracts.py`: `TextArtifact`, `TextEvidenceUnit`,
+`TextLossKind`, `TextUnitClass`, `TextCitationAddress`, `TextProducer`,
+`TextRunResult`, `TextCapability`, `TextSupport`. They describe this Skill's
+domain and nothing else. The loss and unit-class vocabularies are stable strings,
+so you can compare against them without importing anything.
+
+## Run the tests and the example
+
+```bash
+python tests/run_all.py --quiet
+python examples/shanhai_legal_text_example.py
+```
+
+No runtime, service, sibling checkout or external path is required. A dedicated
+isolation suite proves it: it checks that no module under `skills/` imports a
+private runtime, that importing the package loads no such module, and that a
+fresh interpreter with **only this repository on its path** can run the entry
+point and the example.
+
+```bash
+python tests/run_all.py     # includes the standalone-isolation suite
+```
+
+## Using it with SeaFlow
+
+When a SeaFlow runtime is present, ShanHai operates as an **official SeaFlow
+Skill**. The integration is implemented in SeaFlow, which adapts this Skill's
+public interface into its own internal model.
+
+The dependency therefore points one way only:
+
+```
+SeaFlow (private runtime)  ---adapts--->  ShanHai (this repository)
+```
+
+ShanHai never imports SeaFlow, and nothing here changes if you never use SeaFlow
+at all.
+
+## Related repositories
+
+| Repository | Role |
 | --- | --- |
-| ShanHai alone (Core supplied explicitly) | `python tests/run_all.py --core-root <root> --quiet` |
-| Fixture determinism | `python fixtures/shanhai/build_text_fixtures.py` |
-| Composite (SeaFlow + ShanHai + LuoHai) | the composite gate in the SeaFlow repository |
+| [SeaFlow](https://github.com/HuDeyi-66/SeaFlow) | Public informational entry point for the project. Documentation only. |
+| [LuoHai](https://github.com/HuDeyi-66/Luo_Hai_Tables_Skill) | The sibling Skill, for structured and tabular evidence. |
 
-## Compatibility
+LuoHai is a **sibling**, not a dependency. Neither Skill imports the other, in
+either direction, and that isolation is asserted by test. The links above are for
+discovery only.
 
-See `SKILL_REFERENCES.json` in the SeaFlow repository — the machine-readable
-publication reference that pins this Skill to a SeaFlow baseline commit and
-records the compatible SeaFlow revision. It is an informational baseline
-document: there is no registry, no dynamic discovery, no marketplace, no
-installation metadata and no runtime network fetch anywhere in SeaFlow.
+## Scope and limitations
+
+* **UTF-8 legal text only.** No PDF, DOCX, OCR or spreadsheets; a format outside
+  this Skill's capability is refused rather than attempted.
+* **No legal authority.** ShanHai extracts and locates text. It does not verify
+  that a provision is in force, applicable or authoritative.
+* **No retrieval, ranking or models.** Matching and selection belong to a caller.
+* **Qualified on Windows with CPython 3.13.14.** The runtime is standard-library
+  only, so nothing pins it to that environment, but other versions and platforms
+  have not been qualified.
 
 ## License
 
-ShanHai-authored code is **licensed under the MIT License**; see `LICENSE`.
+MIT. See `LICENSE`.
 
 ```
 Copyright (c) 2026 Peng Wang (Hu Deyi)
 ```
 
-Third-party components keep their own licenses and are not relicensed by this
-project. See `DEPENDENCIES.md`.
+This license covers this repository. It does not extend to the private SeaFlow
+base runtime, which is separately maintained and about which this repository
+makes no licensing statement. See `DEPENDENCIES.md`.
