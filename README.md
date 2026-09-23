@@ -9,11 +9,10 @@
 **Legal Text Evidence Skill**
 
 ShanHai is an independently usable open-source Skill for structured legal and
-textual evidence extraction and citation. It reads UTF-8 legal text, detects
-legal structure, and emits evidence units carrying exact character, byte and line
-spans. It reconstructs citations that can be re-checked against the artifact, and
-reports structural problems as distinct, inspectable outcomes instead of
-guessing.
+textual evidence extraction and citation. It reads UTF-8 legal text, detects legal
+structure, and emits evidence units carrying exact character, byte and line spans.
+It reconstructs citations that can be re-checked against the artifact, and reports
+structural problems as distinct, inspectable outcomes instead of guessing.
 
 Nothing is inferred silently: a value that was not read is reported as loss, a
 location that is not unique is reported as ambiguity, and a problem with the
@@ -54,78 +53,96 @@ ShanHai does **not** provide legal advice, semantic legal reasoning, LLM
 generation, autonomous agents, verified legal authority, or universal
 legal-format support.
 
-## Validated Legal-Source Coverage
+## Currently Indexed and Searchable Legal Sources
 
-ShanHai is a **Skill, not a corpus**. This repository ships the extraction
-capability; it does not ship the legal texts, and the public repository is not
-the owner's private source collection.
+The list below covers legal materials that are **both ingested and searchable**:
+ShanHai has read the text and can locate exact provisions in it. Where a source
+has several language versions, each searchable version is listed in its own
+language, because a rendering in another language is not automatically
+equivalent in authority.
 
-The following legal instruments and representations have been used in the
-current real-source intake and validation corpus. **The source texts themselves
-are not distributed as part of this repository**, so cloning it does not give
-you the sources listed below.
+This repository is a **Skill, not a corpus**. It ships the extraction capability
+only. **The underlying legal-source texts are not distributed here**, so cloning
+this repository does not give you any of the sources listed below — the Skill and
+the legal corpus are separate.
 
-**Corpus shape:** 19 legal instruments · 26 representations · 26 hash-bound
-artifacts · 18 extraction-eligible · 8 extraction-blocked · 13 `ADMITTED` ·
-2 `ADMITTED_WITH_LIMITATIONS` · 11 `REVIEW_REQUIRED`.
+ShanHai does not itself retrieve or rank: it locates and cites provisions inside
+the source it is given, and matching or selection belongs to the caller.
 
-Admission is decided **per representation**, not per instrument, so where an
-instrument has several representations each one carries its own status. In the
-status cells below, the lines correspond to the representations listed in the
-same order. A representation blocked by format does not mean the instrument is
-unsupported: another representation of the same instrument may hold a different
-status. `SAME_INSTRUMENT_DIFFERENT_REPRESENTATION` records that two texts render
-one instrument; it does **not** assert `AUTHORITY_EQUIVALENCE` between them, and
-no such equivalence is claimed anywhere in this table.
+### Chinese Law (中国法)
 
-| Legal instrument | Jurisdiction / level | Representation(s) | Current status | Notes |
-| --- | --- | --- | --- | --- |
-| 中华人民共和国宪法 — Constitution of the PRC | CN · Constitution | Chinese TXT | Chinese TXT — `ADMITTED` | Chapter context limited (GAP-002); article-level evidence unaffected |
-| 中华人民共和国刑法 — Criminal Law | CN · NPC law | Chinese TXT<br>English TXT | Chinese TXT — `ADMITTED`<br>English TXT — `REVIEW_REQUIRED` | The English rendering is blocked by representation format (`Article N` Latin headings), not by instrument quality |
-| 中华人民共和国刑事诉讼法 — Criminal Procedure Law | CN · NPC law | Chinese TXT | Chinese TXT — `ADMITTED` | Chapter numbering legitimately restarts across its parts (GAP-002); article-level evidence unaffected |
-| 中华人民共和国民法典 — Civil Code | CN · NPC law | Chinese TXT | Chinese TXT — `REVIEW_REQUIRED` | GAP-001: 999 of 1260 article markers resolve; articles 1000–1260 are not citable from this representation |
-| 中华人民共和国民事诉讼法 — Civil Procedure Law | CN · NPC law | Chinese TXT | Chinese TXT — `ADMITTED` | — |
-| 国内水路运输管理条例 — Regulation on Domestic Water Transport | CN · State Council administrative regulation | Chinese TXT | Chinese TXT — `ADMITTED` | — |
-| 国内水路运输管理规定 — Provisions on Domestic Water Transport | CN · departmental rule | Chinese TXT | Chinese TXT — `ADMITTED_WITH_LIMITATIONS` | Two non-article enumerated lines are kept as reported lossy fragments; all 58 articles resolve |
-| 商业秘密保护规定 — Provisions on Trade Secret Protection | CN · departmental rule | Chinese TXT | Chinese TXT — `ADMITTED` | — |
-| 中华人民共和国反不正当竞争法 — Anti-Unfair Competition Law | CN · NPC law | Chinese TXT | Chinese TXT — `ADMITTED` | — |
-| 中华人民共和国仲裁法 — Arbitration Law | CN · NPC law | Chinese TXT | Chinese TXT — `ADMITTED_WITH_LIMITATIONS` | The artifact carries a scraped publication page header that is not part of the instrument; all 96 articles resolve |
-| 中华人民共和国企业破产法 — Enterprise Bankruptcy Law | CN · NPC law | Chinese TXT | Chinese TXT — `ADMITTED` | — |
-| 中华人民共和国反间谍法 — Counter-Espionage Law | CN · NPC law | Chinese TXT | Chinese TXT — `ADMITTED` | — |
-| 中华人民共和国网络安全法 — Cybersecurity Law | CN · NPC law | Chinese TXT | Chinese TXT — `ADMITTED` | — |
-| 中华人民共和国劳动法 — Labour Law | CN · NPC law | Chinese TXT | Chinese TXT — `ADMITTED` | — |
-| 中华人民共和国海上交通安全法 — Maritime Traffic Safety Law | CN · NPC law | Chinese TXT | Chinese TXT — `ADMITTED` | — |
-| 中华人民共和国证券法 — Securities Law | CN · NPC law | Chinese TXT | Chinese TXT — `ADMITTED` | — |
-| 承认及执行外国仲裁裁决公约 — New York Convention (1958) | International · UN treaty | Chinese TXT<br>English TXT<br>Chinese PDF<br>English PDF | Chinese TXT — `REVIEW_REQUIRED`<br>English TXT — `REVIEW_REQUIRED`<br>Chinese PDF — `REVIEW_REQUIRED`<br>English PDF — `REVIEW_REQUIRED` | Issuing organ and depositary are not evidenced in these artifacts and the Chinese rendering is not marked as authenticated; the English TXT is blocked by heading format and both PDFs by container format |
-| 联合国全程或者部分海上国际货物运输合同公约 — Rotterdam Rules | International · UN treaty | Chinese TXT<br>English TXT<br>Chinese PDF<br>English PDF | Chinese TXT — `REVIEW_REQUIRED`<br>English TXT — `REVIEW_REQUIRED`<br>Chinese PDF — `REVIEW_REQUIRED`<br>English PDF — `REVIEW_REQUIRED` | Line-initial in-prose cross-references make four articles ambiguous for selection (all 96 article numbers still resolve); authority and entry-into-force status unevidenced; the English TXT and both PDFs are blocked |
-| UK Public General Act 1995 c.21 (candidate) | UK · foreign national law (candidate) | Scanned PDF | Scanned PDF — `REVIEW_REQUIRED` | Identity/provenance requires further review; scanned-image PDF with no readable text layer, and the filename is not itself evidence of identity |
+| Source | What it is |
+| --- | --- |
+| `CN_Constitution` | 中华人民共和国宪法 |
+| `CN_Criminal_Law` | 中华人民共和国刑法 |
+| `CN_Criminal_Procedure_Law` | 中华人民共和国刑事诉讼法 |
+| `CN_Civil_Code` | 中华人民共和国民法典 |
+| `CN_Civil_Procedure_Law` | 中华人民共和国民事诉讼法 |
+| `CN_Maritime_Law_2025` | 中华人民共和国海商法 |
+| `CN_ECOLOGICAL_ENVIRONMENT_CODE_2026` | 中华人民共和国生态环境法典 |
+| `CN_SPECIAL_MARITIME_PROCEDURE_LAW_1999` | 中华人民共和国海事诉讼特别程序法 |
+| `CN_LAW_APPLICABLE_TO_FOREIGN_RELATED_CIVIL_RELATIONS_2010` | 中华人民共和国涉外民事关系法律适用法 |
+| `CN_Anti-Unfair_Competition_Law` | 中华人民共和国反不正当竞争法 |
+| `CN_Arbitration_Law` | 中华人民共和国仲裁法 |
+| `CN_Bankruptcy_Law` | 中华人民共和国企业破产法 |
+| `CN_Counterespionage_Law` | 中华人民共和国反间谍法 |
+| `CN_Cybersecurity_Law` | 中华人民共和国网络安全法 |
+| `CN_Labour_Law` | 中华人民共和国劳动法 |
+| `CN_Maritime_Traffic_Safety_Law` | 中华人民共和国海上交通安全法 |
+| `CN_Securities_Law` | 中华人民共和国证券法 |
+| `CN_Regulation_Water_Transport` | 国内水路运输管理条例 |
+| `CN_Provisions_Water_Transport` | 国内水路运输管理规定 |
+| `CN_Provisions_on_Trade_Secret_Protection` | 商业秘密保护规定 |
 
-Instrument level is taken from the promulgating authority evidenced in the
-artifact text (`国务院令第…号`, `交通运输部令第…号`, `…会议通过`, `制定本法`),
-not from title words such as 法, 条例 or 规定. Judicial interpretations, local
-regulations and local government rules are not present in this corpus at all.
+### Japanese Law (日本法)
 
-### Blocked representations, and what they do not mean
+| Source | What it is |
+| --- | --- |
+| `JP_INTL_CARRIAGE_GOODS_BY_SEA_2018` | 国際海上物品運送法 — Act No. 172 of 1957, searchable in its Japanese text |
 
-A representation is `EXTRACTION_BLOCKED` when the standalone Skill cannot read
-its format or structure: PDF containers (no OCR is performed), scanned-image
-PDFs, or English renderings that use `Article N` Latin headings instead of the
-Chinese `第X条` markers this Skill targets. That is a statement about one
-representation, not about the legal instrument — where the same instrument also
-has a supported Chinese TXT rendering, that rendering is assessed separately and
-may be admitted. No blocked artifact was converted or OCRed to make the intake
-look complete, and no legal identity is inferred from a filename.
+### Hague / Hague-Visby System
 
-### What admission status does — and does not — mean
+Held locally but **not yet searchable** through ShanHai.
 
-Admission status describes ShanHai's current evidence-processing state for a
-specific representation; it does not by itself determine legal force,
-applicability or authority. `ADMITTED` records that a hash-bound,
-extraction-eligible representation resolved against an independent article-side
-census and carries no recorded authority gap — it does not mean the instrument
-is in force, applicable to any particular question, or officially verified.
-Inclusion in the validated corpus is **not legal advice**, and query-time
-relevance remains conditional on the issue at hand.
+| Held but not yet searchable | Why |
+| --- | --- |
+| Hague Rules 1924, Visby Protocol 1968, SDR Protocol 1979 | English `Article N` headings |
+| Consolidated Hague-Visby text | A derived consolidation of the same three instruments; also English `Article N` headings |
+
+ShanHai therefore reports them as an unsupported structure rather than guessing at
+their articles. They are deliberately **not** listed among the searchable sources
+above, because they cannot currently be searched or cited.
+
+### UN Conventions and Related Materials
+
+Held locally but **not yet searchable** through ShanHai.
+
+| Held but not yet searchable | Why |
+| --- | --- |
+| New York Convention 1958 | Its Chinese rendering is searchable in principle, but its issuing organ and depositary are not evidenced in the held text, so it is withheld pending review; the English rendering and both PDFs are unreadable to this Skill |
+| Rotterdam Rules 2008 | Searchable only in a Chinese rendering whose authority is unevidenced, and four of its articles cannot be selected unambiguously; the English rendering and both PDFs are unreadable to this Skill |
+| Hamburg Rules 1978 | English `Article N` headings. Its Common Understanding is an interpretive annex of the Convention, not a separate instrument, and is not independently citable |
+| UNCLOS 1982 | English `Article N` headings |
+| UK Public General Act 1995 c.21 (candidate) | Scanned-image PDF; identity not established from the text |
+
+UNCLOS is held as a source package — the Convention text together with its
+integral annexes and Final Act material. Those annexes are components of the
+Convention, not separate instruments.
+
+The Rotterdam Rules entry above is the one case where a held rendering *is*
+searchable: its Chinese text resolves article numbers, but four articles return
+several candidates and none is selected, and the rendering's authority status is
+unevidenced. It is listed here rather than above so that the limitation stays
+visible next to the name.
+
+### Known limitation affecting the Civil Code
+
+The Chinese Civil Code is searchable, but **some article numbers written with the
+Chinese numeral containing “千” cannot currently be located**, so a citation to
+those articles cannot be resolved from the held text — in practice the articles
+above number 999. Every other listed source resolves at article level. The same
+numeral limitation was observed independently on a separately maintained copy of
+the Ecological Environment Code.
 
 ## Installation
 
@@ -195,20 +212,15 @@ whose path contains **only this repository**.
 * **Chinese legal markers.** Article and chapter detection targets numbered
   Chinese markers (`第X条`, `第X章`). `Article N`-style Latin headings are outside
   this Skill's scope and are reported as an unsupported structure.
-* **GAP-001 — CJK numerals containing 千 are not resolved.** Some article numbers
+* **Chinese numerals containing 千 are not resolved.** Some article numbers
   written with Chinese numerals cannot currently be located, so a citation to
-  them cannot be resolved. In the validated corpus this affects the Chinese Civil
-  Code representation (999 of 1260 article markers resolve; articles 1000–1260
-  are not citable from it); the same gap was observed independently on a
-  separately maintained representation of the PRC Ecological Environment Code,
-  outside this corpus. It is specific to the CJK numeral representation, not to
-  article magnitude — the Criminal Law reaches article 452 using half-width
-  digits and resolves fully.
-* **GAP-002 — table-of-contents / body chapter ambiguity.** Chapter markers
-  inside a table of contents and genuine body chapter structures cannot always
-  be distinguished reliably, and repeated chapter numbering can be legitimate
-  when numbering restarts across Parts. This affects chapter context only:
-  article-level evidence is unaffected, and no blind deduplication is performed.
+  them cannot be resolved. This is specific to the numeral form, not to article
+  magnitude: a text using half-width digits is unaffected.
+* **Table-of-contents / body chapter ambiguity.** Chapter markers inside a table
+  of contents and genuine body chapter structures cannot always be distinguished
+  reliably, and repeated chapter numbering can be legitimate when numbering
+  restarts across Parts. This affects chapter context only; article-level
+  evidence is unaffected, and no blind deduplication is performed.
 * **UTF-8 only for encoding.** A BOM-less legacy encoding is reported as an
   encoding failure rather than guessed at.
 * **Paragraph splitting is partial.** Paragraphs are blank-line separated blocks;
