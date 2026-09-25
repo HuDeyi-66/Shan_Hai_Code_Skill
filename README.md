@@ -2,7 +2,7 @@
   <img src="docs/assets/shanhai-header.png" alt="ShanHai（海珊）" />
 </p>
 
-[English](README.md) | [简体中文](README.zh-CN.md)
+[English](README.md) | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | [日本語](README.ja.md)
 
 # ShanHai（海珊）
 
