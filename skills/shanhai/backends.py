@@ -147,12 +147,17 @@ class FixtureTextBackend:
                 backend_version=self.backend_version,
                 backend_path=self.backend_path,
             )
+        return self.load_bytes(raw, options, path=str(path))
+
+    def load_bytes(self, raw: bytes, options: Mapping[str, Any] | None = None,
+                   *, path: str | None = None) -> TextDocument:
+        """The same deterministic parser for verified in-memory UTF-8 bytes."""
         document = read_text_bytes(
             raw,
             backend_id=self.backend_id,
             backend_version=self.backend_version,
             backend_path=self.backend_path,
-            metadata={"encoding": "utf-8", "path": str(path)},
+            metadata={"encoding": "utf-8", "path": path},
         )
         return document
 

@@ -10,5 +10,10 @@ its own side. The isolation guarantee is that neither Skill *package* imports th
 other, and it is asserted by test.
 """
 
+from pkgutil import extend_path
+
+# Allow sibling qualified packages on sys.path without importing them.
+__path__ = extend_path(__path__, __name__)
+
 from .shanhai import *  # noqa: F401,F403
 from .shanhai import __all__  # noqa: F401

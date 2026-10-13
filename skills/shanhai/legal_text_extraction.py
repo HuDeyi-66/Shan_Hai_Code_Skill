@@ -181,7 +181,7 @@ class ShanHaiLegalTextEvidence(TextEvidenceSkill):
     """
 
     skill_id = "ShanHai.LegalTextEvidence"
-    skill_version = "0.1.0-provisional"
+    skill_version = "0.1.1-provisional"
 
     def __init__(
         self,
@@ -249,7 +249,8 @@ class ShanHaiLegalTextEvidence(TextEvidenceSkill):
             )
 
         path = artifact.location
-        if not path:
+        payload = getattr(artifact, "payload_bytes", None)
+        if not path and payload is None:
             diagnostics.error(
                 "artifact_has_no_location",
                 "artifact carries no readable location; nothing can be read",
@@ -311,7 +312,7 @@ class ShanHaiLegalTextEvidence(TextEvidenceSkill):
                 artifact, producer, diagnostics, run_id, started_at, ()
             )
 
-        document = self._safe_load(choice.backend, path, merged, diagnostics)
+        document = self._safe_load(choice.backend, path, merged, diagnostics, payload)
         units = self._build_units(
             artifact=artifact,
             source_id=resolved_source_id,
@@ -358,7 +359,7 @@ class ShanHaiLegalTextEvidence(TextEvidenceSkill):
         )
 
     @staticmethod
-    def _verify_artifact_bytes(artifact: TextArtifact, path: str) -> str | None:
+    def _verify_artifact_bytes(artifact: TextArtifact, path: str | None) -> str | None:
         """Re-read the artifact and compare it with the recorded digest.
 
         Returns a problem description, or ``None`` when the bytes match. The bytes
@@ -367,8 +368,10 @@ class ShanHaiLegalTextEvidence(TextEvidenceSkill):
         does with the file.
         """
         try:
-            with open(path, "rb") as handle:
-                payload = handle.read()
+            payload = getattr(artifact, "payload_bytes", None)
+            if payload is None:
+                with open(path, "rb") as handle:
+                    payload = handle.read()
         except OSError as exc:
             return (
                 f"artifact is unreadable, so its integrity cannot be verified: {exc}"
@@ -424,9 +427,10 @@ class ShanHaiLegalTextEvidence(TextEvidenceSkill):
     def _safe_load(
         self,
         backend: TextBackend,
-        path: str,
+        path: str | None,
         options: Mapping[str, Any],
         diagnostics: TextRunDiagnostics,
+        payload: bytes | None = None,
     ) -> TextDocument:
         """Call ``backend.load`` and turn an exception into evidence.
 
@@ -435,6 +439,11 @@ class ShanHaiLegalTextEvidence(TextEvidenceSkill):
         swallow process-level interruption.
         """
         try:
+            if payload is not None:
+                loader = getattr(backend, "load_bytes", None)
+                if not callable(loader):
+                    raise ValueError("selected backend does not support byte input")
+                return loader(payload, options)
             return backend.load(path, options)
         except Exception as exc:  # noqa: BLE001 - converted into diagnostics
             problem = f"{type(exc).__name__}: {exc}"

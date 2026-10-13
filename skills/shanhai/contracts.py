@@ -120,6 +120,9 @@ class TextArtifact:
     byte_length: int = 0
     location: str | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
+    # Owned by this Skill, not shared Core. Never included in metadata exports.
+    # Metadata-only round trips require the original bytes to be supplied again.
+    payload_bytes: bytes | None = field(default=None, repr=False, compare=False)
 
     def __post_init__(self) -> None:
         if not self.artifact_id:
@@ -131,6 +134,8 @@ class TextArtifact:
             )
         if self.byte_length < 0:
             raise TextContractError("byte_length must not be negative")
+        if self.payload_bytes is not None and not isinstance(self.payload_bytes, bytes):
+            raise TextContractError("payload_bytes must be immutable bytes")
 
     @property
     def content_digest(self) -> str:
@@ -670,7 +675,7 @@ class TextRunResult:
     document was read in full".
     """
 
-    artifact: TextArtifact
+    artifact: TextArtifact | None
     skill_id: str
     producer: Any  # TextProducer; loose to avoid a circular import
     units: tuple[TextEvidenceUnit, ...] = ()
@@ -753,7 +758,7 @@ class TextRunResult:
             "producer": self.producer.as_dict()
             if hasattr(self.producer, "as_dict")
             else dict(self.producer),
-            "artifact": self.artifact.as_dict(),
+            "artifact": None if self.artifact is None else self.artifact.as_dict(),
             "started_at": self.started_at,
             "finished_at": self.finished_at,
             "diagnostics": self.diagnostics.as_dict(),
