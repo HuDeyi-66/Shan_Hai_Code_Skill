@@ -1,0 +1,38 @@
+{
+  "skill": "ShanHai",
+  "version": "1.0.0",
+  "implementation": "skills/shanhai/operators_v1.py",
+  "operators": [
+    {
+      "name": "Structure",
+      "filename": "structure-v1.png",
+      "subtitle": "Verify the representation; retain bounded structural observations.",
+      "signature": "\\mathrm{Structure}_{v1}:\\mathcal{R}\\times\\mathcal{P}\\times\\mathcal{B}\\times\\mathcal{H}_{\\bot}\\longrightarrow\\mathcal{O}_{s}",
+      "inputs": ["$\\mathcal{R}$  Representation: UTF-8 bytes and R identity", "$\\mathcal{P}$  ProfileId;  $\\mathcal{B}$  SourceBinding", "$\\mathcal{H}_{\\bot}$  HeadingOffsets or None"],
+      "outputs": ["$\\mathcal{O}_{s}$  StructuralObservationResult", "Typed observations and revalidated analysis", "Bound identity, digest, spans and diagnostics"],
+      "relation_title": "Binding and exact-span conditions for observed results",
+      "relations": ["h(R_{\\mathrm{bytes}})=B_{\\mathrm{digest}},\\qquad \\mathrm{id}_{R}=\\mathrm{id}_{B}", "R_{\\mathrm{text}}[a_o:b_o]=o.\\mathrm{text}\\qquad(o\\in O_s.\\mathrm{observations})"],
+      "lower_title": "Outcome states and epistemic basis",
+      "notes": ["$\\sigma\\in\\{\\mathrm{observed},\\mathrm{unavailable},\\mathrm{refused}\\}$;  h denotes SHA-256.", "Native character / UTF-8 byte spans and original heading_basis are retained.", "Caller heading assertions and heuristic parent relations keep their weaker basis.", "Identical inputs and canonical rules yield deterministic result identities."],
+      "limit": "Verified R text does not establish legal structure or qualified A-to-R derivation.",
+      "source_symbols": ["Representation", "SourceBinding", "StructuralObservationResult", "structure"],
+      "contract": "docs/operators-v1.md#structure"
+    },
+    {
+      "name": "ResolveRefs",
+      "filename": "resolve-refs-v1.png",
+      "subtitle": "Revalidate bound analysis; preserve every native label candidate.",
+      "signature": "\\mathrm{ResolveRefs}_{v1}:\\mathcal{R}\\times\\mathcal{O}_{s}\\times\\mathcal{Q}\\longrightarrow\\mathcal{O}_{r}",
+      "inputs": ["$\\mathcal{R}$  Representation;  $\\mathcal{O}_{s}$  STRUCTURE result", "$\\mathcal{Q}$  ReferenceRequest: observation index", "or typed kind + label + optional scope"],
+      "outputs": ["$\\mathcal{O}_{r}$  ReferenceResolutionResult", "All native citations in deterministic source order", "Original reference spans, provenance and status"],
+      "relation_title": "After full analysis and wrapper revalidation",
+      "relations": ["C_q=\\mathrm{sort}_{(a,b,\\mathrm{unit\\_id})}\\!\\left(\\mathrm{resolve}(A,q).\\mathrm{candidates}\\right)", "q\\in\\mathcal{Q}_{\\mathrm{label}}\\ \\wedge\\ q.\\mathrm{scope}=\\bot\\ \\wedge\\ |C_q|=1\\ \\Rightarrow\\ \\sigma=\\mathrm{unknown\\_scope}"],
+      "relation_size": 18,
+      "lower_title": "Typed outcomes; no first-match promotion",
+      "notes": ["unique_source_label_match · ambiguous · missing · unknown_scope", "relative · range · external · unsupported · granularity_unresolved · refused", "$\\mathcal{Q}_{\\mathrm{label}}$ means a supported label-only request; $\\bot$ means no supplied scope.", "Native relative / range / external / granularity states retain their non-success status."],
+      "limit": "Source-label matching does not assess legal correctness or contextual legal uniqueness.",
+      "source_symbols": ["ReferenceRequest", "ReferenceResolutionResult", "resolve_refs"],
+      "contract": "docs/operators-v1.md#resolve_refs"
+    }
+  ]
+}

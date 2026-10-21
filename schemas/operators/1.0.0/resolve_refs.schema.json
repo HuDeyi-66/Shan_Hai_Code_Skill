@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "shanhai-reference-resolution/1.0.0",
+  "$ref": "#/$defs/ReferenceResolutionResult",
+  "$defs": {
+    "ReferenceResolutionResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": "shanhai-reference-resolution/1.0.0"
+        },
+        "operator": {
+          "const": "RESOLVE_REFS"
+        },
+        "status": {
+          "enum": [
+            "unique_source_label_match",
+            "ambiguous",
+            "missing",
+            "unknown_scope",
+            "relative",
+            "range",
+            "external",
+            "unsupported",
+            "granularity_unresolved",
+            "refused"
+          ]
+        },
+        "binding": {
+          "$ref": "#/$defs/SourceBinding"
+        },
+        "analysis_id": {
+          "type": "string"
+        },
+        "request": {
+          "$ref": "#/$defs/ReferenceRequest"
+        },
+        "reference": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": {}
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "candidates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        },
+        "label_search_status": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Diagnostic"
+          }
+        },
+        "provenance": {
+          "type": "string"
+        },
+        "legal_reference_correctness": {
+          "type": "string"
+        },
+        "contextual_uniqueness": {
+          "type": "string"
+        },
+        "result_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema",
+        "operator",
+        "status",
+        "binding",
+        "analysis_id",
+        "request",
+        "reference",
+        "candidates",
+        "label_search_status",
+        "diagnostics",
+        "provenance",
+        "legal_reference_correctness",
+        "contextual_uniqueness",
+        "result_id"
+      ]
+    },
+    "SourceBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "type": "string"
+        },
+        "representation_id": {
+          "type": "string"
+        },
+        "expected_digest": {
+          "type": "string"
+        },
+        "artifact_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "require_source_qualification": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source_id",
+        "representation_id",
+        "expected_digest",
+        "artifact_id",
+        "require_source_qualification"
+      ]
+    },
+    "ReferenceRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "observation_index": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "scope": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "observation_index",
+        "kind",
+        "label",
+        "scope"
+      ]
+    },
+    "Diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "detail"
+      ]
+    }
+  }
+}

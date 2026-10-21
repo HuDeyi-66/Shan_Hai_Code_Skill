@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "shanhai-structure/1.0.0",
+  "$ref": "#/$defs/StructuralObservationResult",
+  "$defs": {
+    "StructuralObservationResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": "shanhai-structure/1.0.0"
+        },
+        "operator": {
+          "const": "STRUCTURE"
+        },
+        "status": {
+          "enum": [
+            "observed",
+            "unavailable",
+            "refused"
+          ]
+        },
+        "binding": {
+          "$ref": "#/$defs/SourceBinding"
+        },
+        "input_digest": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/StructuralObservation"
+          }
+        },
+        "analysis": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": {}
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Diagnostic"
+          }
+        },
+        "source_qualification": {
+          "type": "string"
+        },
+        "identity_basis": {
+          "type": "string"
+        },
+        "result_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema",
+        "operator",
+        "status",
+        "binding",
+        "input_digest",
+        "observations",
+        "analysis",
+        "diagnostics",
+        "source_qualification",
+        "identity_basis",
+        "result_id"
+      ]
+    },
+    "SourceBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "type": "string"
+        },
+        "representation_id": {
+          "type": "string"
+        },
+        "expected_digest": {
+          "type": "string"
+        },
+        "artifact_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "require_source_qualification": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source_id",
+        "representation_id",
+        "expected_digest",
+        "artifact_id",
+        "require_source_qualification"
+      ]
+    },
+    "StructuralObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "unit_id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "parent_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "span": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "heading_span": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "marker_span": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "text": {
+          "type": "string"
+        },
+        "heading_text": {
+          "type": "string"
+        },
+        "marker_text": {
+          "type": "string"
+        },
+        "heading_basis": {
+          "type": "string"
+        },
+        "structure_basis": {
+          "enum": [
+            "caller_assertion",
+            "heuristic_observation"
+          ]
+        },
+        "text_basis": {
+          "type": "string"
+        },
+        "parent_basis": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "unit_id",
+        "kind",
+        "label",
+        "scope",
+        "parent_id",
+        "span",
+        "heading_span",
+        "marker_span",
+        "text",
+        "heading_text",
+        "marker_text",
+        "heading_basis",
+        "structure_basis",
+        "text_basis",
+        "parent_basis"
+      ]
+    },
+    "Diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "detail"
+      ]
+    }
+  }
+}

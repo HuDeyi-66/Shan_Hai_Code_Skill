@@ -1,0 +1,561 @@
+{
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "shanhai-source-chunking/1.0.0"
+    },
+    "status": {
+      "enum": [
+        "CHUNKED",
+        "EMPTY_INPUT"
+      ]
+    },
+    "representation": {
+      "$ref": "#/$defs/representation"
+    },
+    "binding": {
+      "$ref": "#/$defs/binding"
+    },
+    "language_mode": {
+      "const": "declared"
+    },
+    "config": {
+      "$ref": "#/$defs/config"
+    },
+    "cues": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/cue"
+      }
+    },
+    "primary_chunks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/chunk"
+      }
+    },
+    "secondary_chunks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/chunk"
+      }
+    },
+    "coverage": {
+      "$ref": "#/$defs/coverage"
+    },
+    "uncertainty": {
+      "$ref": "#/$defs/uncertainty"
+    },
+    "result_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "required": [
+    "schema",
+    "status",
+    "representation",
+    "binding",
+    "language_mode",
+    "config",
+    "cues",
+    "primary_chunks",
+    "secondary_chunks",
+    "coverage",
+    "uncertainty",
+    "result_sha256"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:shanhai:source-chunking:1.0.0",
+  "$defs": {
+    "binding": {
+      "type": "object",
+      "properties": {
+        "contract": {
+          "const": "shanhai-source-chunking/1.0.0"
+        },
+        "representation_record_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "representation_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "language": {
+          "enum": [
+            "zh",
+            "en",
+            "ja",
+            "ru",
+            "fr",
+            "ar",
+            "de",
+            "es",
+            "pt"
+          ]
+        },
+        "profile_id": {
+          "type": "string"
+        },
+        "config_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "cue_records_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "contract",
+        "representation_record_sha256",
+        "representation_sha256",
+        "language",
+        "profile_id",
+        "config_sha256",
+        "cue_records_sha256"
+      ],
+      "additionalProperties": false
+    },
+    "derivation": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "shanhai-text-derivation/1.0.0"
+        },
+        "method": {
+          "enum": [
+            "identity-utf8",
+            "qualified-external-projection"
+          ]
+        },
+        "artifact_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "representation_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "mapping_sha256": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "qualification_receipt_sha256": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "exclusions": {
+          "type": "array",
+          "items": {}
+        },
+        "generated_layout": {
+          "type": "array",
+          "items": {}
+        },
+        "information_loss": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "schema",
+        "method",
+        "artifact_sha256",
+        "representation_sha256",
+        "mapping_sha256",
+        "qualification_receipt_sha256",
+        "exclusions",
+        "generated_layout",
+        "information_loss"
+      ],
+      "additionalProperties": false
+    },
+    "representation": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "shanhai-qualified-representation/1.0.0"
+        },
+        "source_id": {
+          "type": "string"
+        },
+        "artifact_id": {
+          "type": "string"
+        },
+        "artifact_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "source_uri": {
+          "type": "string"
+        },
+        "source_qualification_id": {
+          "type": "string"
+        },
+        "representation_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "representation_byte_length": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "coordinate_system": {
+          "const": "R:unicode_codepoints+utf8_bytes"
+        },
+        "derivation": {
+          "$ref": "#/$defs/derivation"
+        }
+      },
+      "required": [
+        "schema",
+        "source_id",
+        "artifact_id",
+        "artifact_sha256",
+        "source_uri",
+        "source_qualification_id",
+        "representation_sha256",
+        "representation_byte_length",
+        "coordinate_system",
+        "derivation"
+      ],
+      "additionalProperties": false
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "shanhai-chunk-config/1.0.0"
+        },
+        "unit": {
+          "const": "unicode_codepoints"
+        },
+        "max_codepoints": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "context_codepoints": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "boundary_policy": {
+          "const": "furthest_verified_cue_within_hard_budget_else_exact_cap"
+        },
+        "oversized_policy": {
+          "const": "split_exact_codepoints_no_exception"
+        },
+        "combining_policy": {
+          "const": "may_split_grapheme_preserve_all_codepoints"
+        },
+        "primary_overlap": {
+          "const": 0
+        }
+      },
+      "required": [
+        "schema",
+        "unit",
+        "max_codepoints",
+        "context_codepoints",
+        "boundary_policy",
+        "oversized_policy",
+        "combining_policy",
+        "primary_overlap"
+      ],
+      "additionalProperties": false
+    },
+    "span": {
+      "type": "object",
+      "properties": {
+        "char_start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "char_end": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "byte_start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "byte_end": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "char_start",
+        "char_end",
+        "byte_start",
+        "byte_end"
+      ],
+      "additionalProperties": false
+    },
+    "citation": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "shanhai-chunk-citation/1.0.0"
+        },
+        "binding": {
+          "$ref": "#/$defs/binding"
+        },
+        "artifact_id": {
+          "type": "string"
+        },
+        "artifact_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "source_id": {
+          "type": "string"
+        },
+        "derivation_record_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "role": {
+          "enum": [
+            "primary",
+            "secondary_context"
+          ]
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "char_start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "char_end": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "byte_start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "byte_end": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "text_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "chunk_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "reference_target_status": {
+          "const": "not_assessed"
+        }
+      },
+      "required": [
+        "schema",
+        "binding",
+        "artifact_id",
+        "artifact_sha256",
+        "source_id",
+        "derivation_record_sha256",
+        "role",
+        "order",
+        "char_start",
+        "char_end",
+        "byte_start",
+        "byte_end",
+        "text_sha256",
+        "chunk_id",
+        "reference_target_status"
+      ],
+      "additionalProperties": false
+    },
+    "chunk": {
+      "type": "object",
+      "properties": {
+        "chunk_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "role": {
+          "enum": [
+            "primary",
+            "secondary_context"
+          ]
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "text": {
+          "type": "string"
+        },
+        "span": {
+          "$ref": "#/$defs/span"
+        },
+        "boundary_status": {
+          "enum": [
+            "end_of_input",
+            "verified_source_cue",
+            "budget_split_without_eligible_verified_cue",
+            "no_verified_cues_fallback",
+            "declared_preceding_context"
+          ]
+        },
+        "legal_unit_type": {
+          "type": "null"
+        },
+        "citation": {
+          "$ref": "#/$defs/citation"
+        }
+      },
+      "required": [
+        "chunk_id",
+        "role",
+        "order",
+        "text",
+        "span",
+        "boundary_status",
+        "legal_unit_type",
+        "citation"
+      ],
+      "additionalProperties": false
+    },
+    "cue": {
+      "type": "object",
+      "properties": {
+        "position": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "kind": {
+          "type": "string"
+        },
+        "verification": {
+          "enum": [
+            "independently_verified",
+            "candidate"
+          ]
+        },
+        "evidence_id": {
+          "type": "string"
+        },
+        "evidence_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "representation_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "position",
+        "kind",
+        "verification",
+        "evidence_id",
+        "evidence_sha256",
+        "representation_sha256"
+      ],
+      "additionalProperties": false
+    },
+    "coverage": {
+      "type": "object",
+      "properties": {
+        "coordinate_system": {
+          "const": "R:unicode_codepoints+utf8_bytes"
+        },
+        "retained_codepoints": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "retained_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "primary_codepoints": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "primary_partition": {
+          "const": "disjoint_ordered_full_R"
+        },
+        "primary_exclusions": {
+          "const": []
+        },
+        "primary_overlap": {
+          "const": 0
+        },
+        "secondary_in_primary_denominator": {
+          "const": false
+        },
+        "chunker_generated_layout": {
+          "const": []
+        },
+        "chunker_information_loss": {
+          "const": []
+        }
+      },
+      "required": [
+        "coordinate_system",
+        "retained_codepoints",
+        "retained_bytes",
+        "primary_codepoints",
+        "primary_partition",
+        "primary_exclusions",
+        "primary_overlap",
+        "secondary_in_primary_denominator",
+        "chunker_generated_layout",
+        "chunker_information_loss"
+      ],
+      "additionalProperties": false
+    },
+    "uncertainty": {
+      "type": "object",
+      "properties": {
+        "legal_interpretation": {
+          "const": "not_assessed"
+        },
+        "reference_targets": {
+          "const": "not_assessed"
+        },
+        "automatic_language_detection": {
+          "const": "not_supported"
+        },
+        "grapheme_preservation_guaranteed": {
+          "const": false
+        },
+        "candidate_cues_ignored": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "legal_interpretation",
+        "reference_targets",
+        "automatic_language_detection",
+        "grapheme_preservation_guaranteed",
+        "candidate_cues_ignored"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

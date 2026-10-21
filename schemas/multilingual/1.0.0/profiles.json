@@ -1,0 +1,128 @@
+{
+  "zh-CN-statute": {
+    "profile_id": "zh-CN-statute",
+    "language": "zh",
+    "variant": "zh-CN",
+    "drafting_family": "modern-Chinese",
+    "document_family": "statute",
+    "version": "1.0.0",
+    "heading_policy": "cjk_line"
+  },
+  "en-EU-act": {
+    "profile_id": "en-EU-act",
+    "language": "en",
+    "variant": "en-EU",
+    "drafting_family": "EU",
+    "document_family": "act",
+    "version": "1.0.0",
+    "heading_policy": "standalone_or_explicit"
+  },
+  "en-commonlaw-statute": {
+    "profile_id": "en-commonlaw-statute",
+    "language": "en",
+    "variant": "en",
+    "drafting_family": "common-law",
+    "document_family": "statute",
+    "version": "1.0.0",
+    "heading_policy": "standalone_or_explicit"
+  },
+  "ja-egov-statute": {
+    "profile_id": "ja-egov-statute",
+    "language": "ja",
+    "variant": "ja-JP",
+    "drafting_family": "e-Gov",
+    "document_family": "statute",
+    "version": "1.0.0",
+    "heading_policy": "cjk_line"
+  },
+  "ru-federal-statute": {
+    "profile_id": "ru-federal-statute",
+    "language": "ru",
+    "variant": "ru-RU",
+    "drafting_family": "federal",
+    "document_family": "statute",
+    "version": "1.0.0",
+    "heading_policy": "standalone_or_explicit"
+  },
+  "fr-EU-act": {
+    "profile_id": "fr-EU-act",
+    "language": "fr",
+    "variant": "fr-EU",
+    "drafting_family": "EU",
+    "document_family": "act",
+    "version": "1.0.0",
+    "heading_policy": "standalone_or_explicit"
+  },
+  "fr-code": {
+    "profile_id": "fr-code",
+    "language": "fr",
+    "variant": "fr-FR",
+    "drafting_family": "French-code",
+    "document_family": "code",
+    "version": "1.0.0",
+    "heading_policy": "standalone_or_explicit"
+  },
+  "ar-QA-statute": {
+    "profile_id": "ar-QA-statute",
+    "language": "ar",
+    "variant": "ar-QA",
+    "drafting_family": "Qatar",
+    "document_family": "statute",
+    "version": "1.0.0",
+    "heading_policy": "standalone_or_explicit"
+  },
+  "de-EU-act": {
+    "profile_id": "de-EU-act",
+    "language": "de",
+    "variant": "de-EU",
+    "drafting_family": "EU",
+    "document_family": "act",
+    "version": "1.0.0",
+    "heading_policy": "standalone_or_explicit"
+  },
+  "de-federal-statute": {
+    "profile_id": "de-federal-statute",
+    "language": "de",
+    "variant": "de-DE",
+    "drafting_family": "federal",
+    "document_family": "statute",
+    "version": "1.0.0",
+    "heading_policy": "standalone_or_explicit"
+  },
+  "es-EU-act": {
+    "profile_id": "es-EU-act",
+    "language": "es",
+    "variant": "es-EU",
+    "drafting_family": "EU",
+    "document_family": "act",
+    "version": "1.0.0",
+    "heading_policy": "standalone_or_explicit"
+  },
+  "es-ordinal-statute": {
+    "profile_id": "es-ordinal-statute",
+    "language": "es",
+    "variant": "es",
+    "drafting_family": "Iberian-ordinal",
+    "document_family": "statute",
+    "version": "1.0.0",
+    "heading_policy": "standalone_or_explicit"
+  },
+  "pt-EU-act": {
+    "profile_id": "pt-EU-act",
+    "language": "pt",
+    "variant": "pt-PT",
+    "drafting_family": "European-Portuguese",
+    "document_family": "act",
+    "version": "1.0.0",
+    "heading_policy": "standalone_or_explicit"
+  },
+  "pt-BR-statute": {
+    "profile_id": "pt-BR-statute",
+    "language": "pt",
+    "variant": "pt-BR",
+    "drafting_family": "Brazilian",
+    "document_family": "statute",
+    "version": "1.0.0",
+    "heading_policy": "standalone_or_explicit"
+  }
+}

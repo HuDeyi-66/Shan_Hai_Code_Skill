@@ -1,3 +1,7 @@
+> Pre-3.6 publication: current bounded implementation and synthetic checks.
+> See [qualification, installation and test commands](docs/PRE36_QUALIFICATION.md).
+> Internal engineering acceptance is distinct from independent external review; V3.6 is pending.
+
 <p align="center">
   <img src="docs/assets/shanhai-header.png" alt="ShanHai（海珊）" />
 </p>
@@ -259,7 +263,103 @@ isolation is asserted by test.
 
 * LuoHai repository: <https://github.com/HuDeyi-66/Luo_Hai_Tables_Skill>
 
+## Opt-in multilingual evidence (V3.4-A development)
+
+The separate `skills.shanhai.multilingual` API provides versioned, bounded
+profiles for Chinese, English, Japanese, Russian, French, Arabic, German,
+Spanish and Portuguese (separate European/Brazilian drafting declarations).
+It preserves original UTF-8 bytes, maps matching views back to original spans,
+reports ambiguous/unresolved references, and reconstructs digest-bound citations.
+Lexical cues and declared-translation structural candidates do not assert legal
+effect, equivalence, authority or temporal validity. The existing API is unchanged.
+
+Read the [contract and limitations](docs/MULTILINGUAL_1_0_0.md), inspect the
+[versioned schemas/profiles](schemas/multilingual/1.0.0/), or run the
+[synthetic standalone example](examples/multilingual_example.py):
+
+```bash
+python -B examples/multilingual_example.py
+python -B -m unittest discover -s tests/multilingual -v
+```
+
+These are development conformance capabilities, not a claim of universal legal
+understanding or independently benchmarked nine-language accuracy. No acquired
+legal-library text, private research or new third-party runtime dependency is included
+in this repository. The analyzer API is separate from the opt-in formal evidence
+operators below.
+
+## Opt-in source-faithful chunking
+
+`skills.shanhai.chunking` adds a separately versioned exact-span interface for
+declared `zh/en/ja/ru/fr/ar/de/es/pt` text. It keeps original artifact and qualified
+text-representation identities separate, partitions the complete retained text,
+enforces a Unicode-codepoint budget and records structural-cue fallback. Optional
+context chunks are separate from primary coverage. Native chunk citations can be
+reconstructed and checked against the original representation.
+
+See [the chunking contract and limitations](docs/chunking-v1.md). Existing evidence,
+analyzer and citation APIs remain unchanged. This interface makes no substantive
+legal interpretation, automatic-language-detection or universal drafting-family
+recognition claim. Source qualification remains an external precondition.
+
+## Formal Evidence Operators
+
+The opt-in `skills.shanhai.operators_v1` module exposes the bounded **1.0.0**
+contracts below. These rendered equations describe the implemented interfaces
+and tested checks; they are not mathematical proofs of legal semantics. The
+existing analyzer, citation and chunking interfaces retain their own scopes.
+
+This operator section is currently maintained in English. The Chinese and
+Japanese README translations do not yet include it; consult this section for
+the current operator contracts.
+
+### Structure
+
+Verifies the bound text representation and delegates structural observation to
+the canonical multilingual analyzer.
+
+![Structure 1.0.0: Representation, ProfileId, SourceBinding and optional heading offsets map to a StructuralObservationResult with digest-bound exact spans and qualified structural observations.](docs/assets/operators/structure-v1.png)
+
+**Types:** `Representation` supplies exact UTF-8 bytes and an R identifier;
+`ProfileId`, `SourceBinding` and optional `HeadingOffsets` supply the declared
+context. `StructuralObservationResult` returns typed observations, canonical
+analysis, original spans, identities, diagnostics and a stable result ID.
+
+**Scope:** text presence is verified against R. Caller heading assertions,
+heuristic structural cues and parent relations remain explicitly qualified.
+Legal structure and an original-artifact-to-R derivation are not independently
+verified; requiring unavailable source qualification produces a refusal.
+See the [Structure 1.0.0 contract](docs/operators-v1.md#structure) and
+[transport schema](schemas/operators/1.0.0/structure.schema.json).
+
+### ResolveRefs
+
+Revalidates the full bound analysis and Structure result before native label
+matching, retaining all candidates in deterministic source order.
+
+![ResolveRefs 1.0.0: Representation, a revalidated Structure result and ReferenceRequest map to ReferenceResolutionResult; a scope-free single label match retains unknown scope.](docs/assets/operators/resolve-refs-v1.png)
+
+**Types:** `Representation`, `StructuralObservationResult` and `ReferenceRequest`
+(an observation index, or kind/label/optional scope) produce a
+`ReferenceResolutionResult` with native citation candidates, original reference
+coordinates, provenance and a typed outcome.
+
+**Scope:** a unique source-label match does not establish substantive legal
+correctness or contextual legal uniqueness. Missing, ambiguous, unknown-scope,
+relative, range, external, unsupported and granularity-unresolved references
+retain explicit states; altered analysis is refused. There is no cross-document
+or cross-version inference.
+See the [ResolveRefs 1.0.0 contract](docs/operators-v1.md#resolve_refs) and
+[transport schema](schemas/operators/1.0.0/resolve_refs.schema.json).
+
+The [rendering source and pinned documentation-only dependencies](docs/assets/operators/README.md) are retained with the PNGs.
+
 ## License
+
+The same-stage Cycle2 opt-in update emits evidence/profile **1.1.0**. See
+[migration, detection modes and limitations](docs/MULTILINGUAL_1_1_0.md).
+Cycle1's incomplete verdict is retained as historical evidence; this update does
+not claim independently adjudicated nine-language acceptance or a later stage.
 
 MIT. See `LICENSE`.
 

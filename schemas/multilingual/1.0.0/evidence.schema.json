@@ -1,0 +1,609 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:shanhai:multilingual:1.0.0",
+  "$defs": {
+    "profile": {
+      "type": "object",
+      "properties": {
+        "profile_id": {
+          "enum": [
+            "zh-CN-statute",
+            "en-EU-act",
+            "en-commonlaw-statute",
+            "ja-egov-statute",
+            "ru-federal-statute",
+            "fr-EU-act",
+            "fr-code",
+            "ar-QA-statute",
+            "de-EU-act",
+            "de-federal-statute",
+            "es-EU-act",
+            "es-ordinal-statute",
+            "pt-EU-act",
+            "pt-BR-statute"
+          ]
+        },
+        "language": {
+          "type": "string"
+        },
+        "variant": {
+          "type": "string"
+        },
+        "drafting_family": {
+          "type": "string"
+        },
+        "document_family": {
+          "type": "string"
+        },
+        "version": {
+          "const": "1.0.0"
+        },
+        "heading_policy": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile_id",
+        "language",
+        "variant",
+        "drafting_family",
+        "document_family",
+        "version",
+        "heading_policy"
+      ],
+      "additionalProperties": false
+    },
+    "result": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "shanhai-multilingual-evidence/1.0.0"
+        },
+        "profile": {
+          "type": "object",
+          "properties": {
+            "profile_id": {
+              "enum": [
+                "zh-CN-statute",
+                "en-EU-act",
+                "en-commonlaw-statute",
+                "ja-egov-statute",
+                "ru-federal-statute",
+                "fr-EU-act",
+                "fr-code",
+                "ar-QA-statute",
+                "de-EU-act",
+                "de-federal-statute",
+                "es-EU-act",
+                "es-ordinal-statute",
+                "pt-EU-act",
+                "pt-BR-statute"
+              ]
+            },
+            "language": {
+              "type": "string"
+            },
+            "variant": {
+              "type": "string"
+            },
+            "drafting_family": {
+              "type": "string"
+            },
+            "document_family": {
+              "type": "string"
+            },
+            "version": {
+              "const": "1.0.0"
+            },
+            "heading_policy": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "profile_id",
+            "language",
+            "variant",
+            "drafting_family",
+            "document_family",
+            "version",
+            "heading_policy"
+          ],
+          "additionalProperties": false
+        },
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "original_text": {
+          "type": "string"
+        },
+        "original_byte_length": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "normalization": {
+          "const": "cluster-NFKC-casefold-decimal-matching-only/1"
+        },
+        "heading_offsets": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "unit_id": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "parent_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "scope": {
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "article",
+                  "section",
+                  "chapter",
+                  "annex",
+                  "paragraph",
+                  "item",
+                  "subitem"
+                ]
+              },
+              "label": {
+                "type": "string"
+              },
+              "span": {
+                "type": "object",
+                "properties": {
+                  "char_start": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "char_end": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "byte_start": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "byte_end": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "char_start",
+                  "char_end",
+                  "byte_start",
+                  "byte_end"
+                ],
+                "additionalProperties": false
+              },
+              "marker_span": {
+                "type": "object",
+                "properties": {
+                  "char_start": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "char_end": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "byte_start": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "byte_end": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "char_start",
+                  "char_end",
+                  "byte_start",
+                  "byte_end"
+                ],
+                "additionalProperties": false
+              },
+              "text": {
+                "type": "string"
+              },
+              "heading_basis": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "unit_id",
+              "parent_id",
+              "scope",
+              "kind",
+              "label",
+              "span",
+              "marker_span",
+              "text",
+              "heading_basis"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string"
+              },
+              "label": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "span": {
+                "type": "object",
+                "properties": {
+                  "char_start": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "char_end": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "byte_start": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "byte_end": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "char_start",
+                  "char_end",
+                  "byte_start",
+                  "byte_end"
+                ],
+                "additionalProperties": false
+              },
+              "text": {
+                "type": "string"
+              },
+              "scope": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "resolved",
+                  "ambiguous",
+                  "missing",
+                  "unknown_scope",
+                  "unsupported_number",
+                  "external_unresolved",
+                  "range_unresolved",
+                  "granularity_unresolved",
+                  "relative_unresolved"
+                ]
+              },
+              "candidates": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "components": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    },
+                    "start": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "end": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "kind": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "start",
+                    "end",
+                    "kind"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "reverse_chain": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "kind",
+              "label",
+              "span",
+              "text",
+              "scope",
+              "status",
+              "candidates",
+              "components",
+              "reverse_chain"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "cues": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "cue_type": {
+                "type": "string"
+              },
+              "span": {
+                "type": "object",
+                "properties": {
+                  "char_start": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "char_end": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "byte_start": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "byte_end": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "char_start",
+                  "char_end",
+                  "byte_start",
+                  "byte_end"
+                ],
+                "additionalProperties": false
+              },
+              "text": {
+                "type": "string"
+              },
+              "status": {
+                "const": "lexical_observation_only"
+              }
+            },
+            "required": [
+              "cue_type",
+              "span",
+              "text",
+              "status"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "char_start": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "char_end": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "code",
+              "char_start",
+              "char_end"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "authority_assessed": {
+          "const": false
+        },
+        "temporal_assessed": {
+          "const": false
+        },
+        "result_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "schema",
+        "profile",
+        "artifact_id",
+        "source_id",
+        "artifact_digest",
+        "original_text",
+        "original_byte_length",
+        "normalization",
+        "heading_offsets",
+        "nodes",
+        "references",
+        "cues",
+        "diagnostics",
+        "authority_assessed",
+        "temporal_assessed",
+        "result_digest"
+      ],
+      "additionalProperties": false
+    },
+    "citation": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "shanhai-multilingual-evidence/1.0.0"
+        },
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "profile_id": {
+          "enum": [
+            "zh-CN-statute",
+            "en-EU-act",
+            "en-commonlaw-statute",
+            "ja-egov-statute",
+            "ru-federal-statute",
+            "fr-EU-act",
+            "fr-code",
+            "ar-QA-statute",
+            "de-EU-act",
+            "de-federal-statute",
+            "es-EU-act",
+            "es-ordinal-statute",
+            "pt-EU-act",
+            "pt-BR-statute"
+          ]
+        },
+        "profile_version": {
+          "const": "1.0.0"
+        },
+        "unit_id": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "span": {
+          "type": "object",
+          "properties": {
+            "char_start": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "char_end": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "byte_start": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "byte_end": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "char_start",
+            "char_end",
+            "byte_start",
+            "byte_end"
+          ],
+          "additionalProperties": false
+        },
+        "text": {
+          "type": "string"
+        },
+        "text_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "schema",
+        "artifact_id",
+        "source_id",
+        "artifact_digest",
+        "profile_id",
+        "profile_version",
+        "unit_id",
+        "span",
+        "text",
+        "text_digest"
+      ],
+      "additionalProperties": false
+    },
+    "span": {
+      "type": "object",
+      "properties": {
+        "char_start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "char_end": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "byte_start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "byte_end": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "char_start",
+        "char_end",
+        "byte_start",
+        "byte_end"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/result"
+    },
+    {
+      "$ref": "#/$defs/citation"
+    }
+  ]
+}

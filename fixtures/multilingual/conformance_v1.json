@@ -1,0 +1,875 @@
+[
+  {
+    "synthetic": true,
+    "language": "zh",
+    "profile_id": "zh-CN-statute",
+    "name": "zh_positive",
+    "category": "positive",
+    "text": "第一條\r\n应当\r\n第二條\r\n依第一條办理。\r\n",
+    "labels": [
+      "1",
+      "2"
+    ],
+    "reference_status": "resolved",
+    "gold_provisions": [
+      {
+        "label": "1",
+        "start": 0,
+        "end": 9
+      },
+      {
+        "label": "2",
+        "start": 9,
+        "end": 23
+      }
+    ],
+    "gold_references": [
+      {
+        "text": "第一條",
+        "start": 15,
+        "end": 18,
+        "status": "resolved"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "zh",
+    "profile_id": "zh-CN-statute",
+    "name": "zh_negative",
+    "category": "negative",
+    "text": "SYNTHETIC αβ 000\n应当",
+    "labels": [],
+    "reference_status": null,
+    "gold_provisions": [],
+    "gold_references": []
+  },
+  {
+    "synthetic": true,
+    "language": "zh",
+    "profile_id": "zh-CN-statute",
+    "name": "zh_ambiguous",
+    "category": "ambiguous",
+    "text": "第一條\n应当\n第一條\n依第一條办理。\n",
+    "labels": [
+      "1",
+      "1"
+    ],
+    "reference_status": "ambiguous",
+    "gold_provisions": [
+      {
+        "label": "1",
+        "start": 0,
+        "end": 7
+      },
+      {
+        "label": "1",
+        "start": 7,
+        "end": 19
+      }
+    ],
+    "gold_references": [
+      {
+        "text": "第一條",
+        "start": 12,
+        "end": 15,
+        "status": "ambiguous"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "zh",
+    "profile_id": "zh-CN-statute",
+    "name": "zh_adversarial",
+    "category": "adversarial",
+    "text": "😀‮第一條\n应当 é‏\n",
+    "labels": [],
+    "reference_status": "unknown_scope",
+    "gold_provisions": [],
+    "gold_references": [
+      {
+        "text": "第一條",
+        "start": 2,
+        "end": 5,
+        "status": "unknown_scope"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "en",
+    "profile_id": "en-EU-act",
+    "name": "en_positive",
+    "category": "positive",
+    "text": "Article 1\r\nshall\r\nArticle 2\r\nSee Article 1.\r\n",
+    "labels": [
+      "1",
+      "2"
+    ],
+    "reference_status": "resolved",
+    "gold_provisions": [
+      {
+        "label": "1",
+        "start": 0,
+        "end": 18
+      },
+      {
+        "label": "2",
+        "start": 18,
+        "end": 45
+      }
+    ],
+    "gold_references": [
+      {
+        "text": "Article 1",
+        "start": 33,
+        "end": 42,
+        "status": "resolved"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "en",
+    "profile_id": "en-EU-act",
+    "name": "en_negative",
+    "category": "negative",
+    "text": "SYNTHETIC αβ 000\nshall",
+    "labels": [],
+    "reference_status": null,
+    "gold_provisions": [],
+    "gold_references": []
+  },
+  {
+    "synthetic": true,
+    "language": "en",
+    "profile_id": "en-EU-act",
+    "name": "en_ambiguous",
+    "category": "ambiguous",
+    "text": "Article 1\nshall\nArticle 1\nSee Article 1.\n",
+    "labels": [
+      "1",
+      "1"
+    ],
+    "reference_status": "ambiguous",
+    "gold_provisions": [
+      {
+        "label": "1",
+        "start": 0,
+        "end": 16
+      },
+      {
+        "label": "1",
+        "start": 16,
+        "end": 41
+      }
+    ],
+    "gold_references": [
+      {
+        "text": "Article 1",
+        "start": 30,
+        "end": 39,
+        "status": "ambiguous"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "en",
+    "profile_id": "en-EU-act",
+    "name": "en_adversarial",
+    "category": "adversarial",
+    "text": "😀‮Article 1\nshall é‏\n",
+    "labels": [],
+    "reference_status": "unknown_scope",
+    "gold_provisions": [],
+    "gold_references": [
+      {
+        "text": "Article 1",
+        "start": 2,
+        "end": 11,
+        "status": "unknown_scope"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "ja",
+    "profile_id": "ja-egov-statute",
+    "name": "ja_positive",
+    "category": "positive",
+    "text": "第一条\r\nできる\r\n第二条\r\n第一条の規定による。\r\n",
+    "labels": [
+      "1",
+      "2"
+    ],
+    "reference_status": "resolved",
+    "gold_provisions": [
+      {
+        "label": "1",
+        "start": 0,
+        "end": 10
+      },
+      {
+        "label": "2",
+        "start": 10,
+        "end": 27
+      }
+    ],
+    "gold_references": [
+      {
+        "text": "第一条",
+        "start": 15,
+        "end": 18,
+        "status": "resolved"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "ja",
+    "profile_id": "ja-egov-statute",
+    "name": "ja_negative",
+    "category": "negative",
+    "text": "SYNTHETIC αβ 000\nできる",
+    "labels": [],
+    "reference_status": null,
+    "gold_provisions": [],
+    "gold_references": []
+  },
+  {
+    "synthetic": true,
+    "language": "ja",
+    "profile_id": "ja-egov-statute",
+    "name": "ja_ambiguous",
+    "category": "ambiguous",
+    "text": "第一条\nできる\n第一条\n第一条の規定による。\n",
+    "labels": [
+      "1",
+      "1"
+    ],
+    "reference_status": "ambiguous",
+    "gold_provisions": [
+      {
+        "label": "1",
+        "start": 0,
+        "end": 8
+      },
+      {
+        "label": "1",
+        "start": 8,
+        "end": 23
+      }
+    ],
+    "gold_references": [
+      {
+        "text": "第一条",
+        "start": 12,
+        "end": 15,
+        "status": "ambiguous"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "ja",
+    "profile_id": "ja-egov-statute",
+    "name": "ja_adversarial",
+    "category": "adversarial",
+    "text": "😀‮第一条\nできる é‏\n",
+    "labels": [],
+    "reference_status": "unknown_scope",
+    "gold_provisions": [],
+    "gold_references": [
+      {
+        "text": "第一条",
+        "start": 2,
+        "end": 5,
+        "status": "unknown_scope"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "ru",
+    "profile_id": "ru-federal-statute",
+    "name": "ru_positive",
+    "category": "positive",
+    "text": "Статья 1\r\nобязан\r\nСтатья 2\r\nСогласно статье 1.\r\n",
+    "labels": [
+      "1",
+      "2"
+    ],
+    "reference_status": "resolved",
+    "gold_provisions": [
+      {
+        "label": "1",
+        "start": 0,
+        "end": 18
+      },
+      {
+        "label": "2",
+        "start": 18,
+        "end": 48
+      }
+    ],
+    "gold_references": [
+      {
+        "text": "статье 1",
+        "start": 37,
+        "end": 45,
+        "status": "resolved"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "ru",
+    "profile_id": "ru-federal-statute",
+    "name": "ru_negative",
+    "category": "negative",
+    "text": "SYNTHETIC αβ 000\nобязан",
+    "labels": [],
+    "reference_status": null,
+    "gold_provisions": [],
+    "gold_references": []
+  },
+  {
+    "synthetic": true,
+    "language": "ru",
+    "profile_id": "ru-federal-statute",
+    "name": "ru_ambiguous",
+    "category": "ambiguous",
+    "text": "Статья 1\nобязан\nСтатья 1\nСогласно статье 1.\n",
+    "labels": [
+      "1",
+      "1"
+    ],
+    "reference_status": "ambiguous",
+    "gold_provisions": [
+      {
+        "label": "1",
+        "start": 0,
+        "end": 16
+      },
+      {
+        "label": "1",
+        "start": 16,
+        "end": 44
+      }
+    ],
+    "gold_references": [
+      {
+        "text": "статье 1",
+        "start": 34,
+        "end": 42,
+        "status": "ambiguous"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "ru",
+    "profile_id": "ru-federal-statute",
+    "name": "ru_adversarial",
+    "category": "adversarial",
+    "text": "😀‮Статья 1\nобязан é‏\n",
+    "labels": [],
+    "reference_status": "unknown_scope",
+    "gold_provisions": [],
+    "gold_references": [
+      {
+        "text": "Статья 1",
+        "start": 2,
+        "end": 10,
+        "status": "unknown_scope"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "fr",
+    "profile_id": "fr-EU-act",
+    "name": "fr_positive",
+    "category": "positive",
+    "text": "Article 1\r\ndoit\r\nArticle 2\r\nSelon l’article 1.\r\n",
+    "labels": [
+      "1",
+      "2"
+    ],
+    "reference_status": "resolved",
+    "gold_provisions": [
+      {
+        "label": "1",
+        "start": 0,
+        "end": 17
+      },
+      {
+        "label": "2",
+        "start": 17,
+        "end": 48
+      }
+    ],
+    "gold_references": [
+      {
+        "text": "article 1",
+        "start": 36,
+        "end": 45,
+        "status": "resolved"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "fr",
+    "profile_id": "fr-EU-act",
+    "name": "fr_negative",
+    "category": "negative",
+    "text": "SYNTHETIC αβ 000\ndoit",
+    "labels": [],
+    "reference_status": null,
+    "gold_provisions": [],
+    "gold_references": []
+  },
+  {
+    "synthetic": true,
+    "language": "fr",
+    "profile_id": "fr-EU-act",
+    "name": "fr_ambiguous",
+    "category": "ambiguous",
+    "text": "Article 1\ndoit\nArticle 1\nSelon l’article 1.\n",
+    "labels": [
+      "1",
+      "1"
+    ],
+    "reference_status": "ambiguous",
+    "gold_provisions": [
+      {
+        "label": "1",
+        "start": 0,
+        "end": 15
+      },
+      {
+        "label": "1",
+        "start": 15,
+        "end": 44
+      }
+    ],
+    "gold_references": [
+      {
+        "text": "article 1",
+        "start": 33,
+        "end": 42,
+        "status": "ambiguous"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "fr",
+    "profile_id": "fr-EU-act",
+    "name": "fr_adversarial",
+    "category": "adversarial",
+    "text": "😀‮Article 1\ndoit é‏\n",
+    "labels": [],
+    "reference_status": "unknown_scope",
+    "gold_provisions": [],
+    "gold_references": [
+      {
+        "text": "Article 1",
+        "start": 2,
+        "end": 11,
+        "status": "unknown_scope"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "ar",
+    "profile_id": "ar-QA-statute",
+    "name": "ar_positive",
+    "category": "positive",
+    "text": "المادة (١)\r\nيجب\r\nالمادة (٢)\r\nوفق المادة (١).\r\n",
+    "labels": [
+      "1",
+      "2"
+    ],
+    "reference_status": "resolved",
+    "gold_provisions": [
+      {
+        "label": "1",
+        "start": 0,
+        "end": 17
+      },
+      {
+        "label": "2",
+        "start": 17,
+        "end": 46
+      }
+    ],
+    "gold_references": [
+      {
+        "text": "المادة (١)",
+        "start": 33,
+        "end": 43,
+        "status": "resolved"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "ar",
+    "profile_id": "ar-QA-statute",
+    "name": "ar_negative",
+    "category": "negative",
+    "text": "SYNTHETIC αβ 000\nيجب",
+    "labels": [],
+    "reference_status": null,
+    "gold_provisions": [],
+    "gold_references": []
+  },
+  {
+    "synthetic": true,
+    "language": "ar",
+    "profile_id": "ar-QA-statute",
+    "name": "ar_ambiguous",
+    "category": "ambiguous",
+    "text": "المادة (١)\nيجب\nالمادة (١)\nوفق المادة (١).\n",
+    "labels": [
+      "1",
+      "1"
+    ],
+    "reference_status": "ambiguous",
+    "gold_provisions": [
+      {
+        "label": "1",
+        "start": 0,
+        "end": 15
+      },
+      {
+        "label": "1",
+        "start": 15,
+        "end": 42
+      }
+    ],
+    "gold_references": [
+      {
+        "text": "المادة (١)",
+        "start": 30,
+        "end": 40,
+        "status": "ambiguous"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "ar",
+    "profile_id": "ar-QA-statute",
+    "name": "ar_adversarial",
+    "category": "adversarial",
+    "text": "😀‮المادة (١)\nيجب é‏\n",
+    "labels": [],
+    "reference_status": "unknown_scope",
+    "gold_provisions": [],
+    "gold_references": [
+      {
+        "text": "المادة (١)",
+        "start": 2,
+        "end": 12,
+        "status": "unknown_scope"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "de",
+    "profile_id": "de-federal-statute",
+    "name": "de_positive",
+    "category": "positive",
+    "text": "§ 1\r\nmuss\r\n§ 2\r\nNach § 1.\r\n",
+    "labels": [
+      "1",
+      "2"
+    ],
+    "reference_status": "resolved",
+    "gold_provisions": [
+      {
+        "label": "1",
+        "start": 0,
+        "end": 11
+      },
+      {
+        "label": "2",
+        "start": 11,
+        "end": 27
+      }
+    ],
+    "gold_references": [
+      {
+        "text": "§ 1",
+        "start": 21,
+        "end": 24,
+        "status": "resolved"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "de",
+    "profile_id": "de-federal-statute",
+    "name": "de_negative",
+    "category": "negative",
+    "text": "SYNTHETIC αβ 000\nmuss",
+    "labels": [],
+    "reference_status": null,
+    "gold_provisions": [],
+    "gold_references": []
+  },
+  {
+    "synthetic": true,
+    "language": "de",
+    "profile_id": "de-federal-statute",
+    "name": "de_ambiguous",
+    "category": "ambiguous",
+    "text": "§ 1\nmuss\n§ 1\nNach § 1.\n",
+    "labels": [
+      "1",
+      "1"
+    ],
+    "reference_status": "ambiguous",
+    "gold_provisions": [
+      {
+        "label": "1",
+        "start": 0,
+        "end": 9
+      },
+      {
+        "label": "1",
+        "start": 9,
+        "end": 23
+      }
+    ],
+    "gold_references": [
+      {
+        "text": "§ 1",
+        "start": 18,
+        "end": 21,
+        "status": "ambiguous"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "de",
+    "profile_id": "de-federal-statute",
+    "name": "de_adversarial",
+    "category": "adversarial",
+    "text": "😀‮§ 1\nmuss é‏\n",
+    "labels": [],
+    "reference_status": "unknown_scope",
+    "gold_provisions": [],
+    "gold_references": [
+      {
+        "text": "§ 1",
+        "start": 2,
+        "end": 5,
+        "status": "unknown_scope"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "es",
+    "profile_id": "es-EU-act",
+    "name": "es_positive",
+    "category": "positive",
+    "text": "Artículo 1\r\ndeberá\r\nArtículo 2\r\nSegún el artículo 1.\r\n",
+    "labels": [
+      "1",
+      "2"
+    ],
+    "reference_status": "resolved",
+    "gold_provisions": [
+      {
+        "label": "1",
+        "start": 0,
+        "end": 20
+      },
+      {
+        "label": "2",
+        "start": 20,
+        "end": 54
+      }
+    ],
+    "gold_references": [
+      {
+        "text": "artículo 1",
+        "start": 41,
+        "end": 51,
+        "status": "resolved"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "es",
+    "profile_id": "es-EU-act",
+    "name": "es_negative",
+    "category": "negative",
+    "text": "SYNTHETIC αβ 000\ndeberá",
+    "labels": [],
+    "reference_status": null,
+    "gold_provisions": [],
+    "gold_references": []
+  },
+  {
+    "synthetic": true,
+    "language": "es",
+    "profile_id": "es-EU-act",
+    "name": "es_ambiguous",
+    "category": "ambiguous",
+    "text": "Artículo 1\ndeberá\nArtículo 1\nSegún el artículo 1.\n",
+    "labels": [
+      "1",
+      "1"
+    ],
+    "reference_status": "ambiguous",
+    "gold_provisions": [
+      {
+        "label": "1",
+        "start": 0,
+        "end": 18
+      },
+      {
+        "label": "1",
+        "start": 18,
+        "end": 50
+      }
+    ],
+    "gold_references": [
+      {
+        "text": "artículo 1",
+        "start": 38,
+        "end": 48,
+        "status": "ambiguous"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "es",
+    "profile_id": "es-EU-act",
+    "name": "es_adversarial",
+    "category": "adversarial",
+    "text": "😀‮Artículo 1\ndeberá é‏\n",
+    "labels": [],
+    "reference_status": "unknown_scope",
+    "gold_provisions": [],
+    "gold_references": [
+      {
+        "text": "Artículo 1",
+        "start": 2,
+        "end": 12,
+        "status": "unknown_scope"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "pt",
+    "profile_id": "pt-EU-act",
+    "name": "pt_positive",
+    "category": "positive",
+    "text": "Artigo 1.º\r\ndeve\r\nArtigo 2.º\r\nNos termos do artigo 1.º.\r\n",
+    "labels": [
+      "1",
+      "2"
+    ],
+    "reference_status": "resolved",
+    "gold_provisions": [
+      {
+        "label": "1",
+        "start": 0,
+        "end": 18
+      },
+      {
+        "label": "2",
+        "start": 18,
+        "end": 57
+      }
+    ],
+    "gold_references": [
+      {
+        "text": "artigo 1.º",
+        "start": 44,
+        "end": 54,
+        "status": "resolved"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "pt",
+    "profile_id": "pt-EU-act",
+    "name": "pt_negative",
+    "category": "negative",
+    "text": "SYNTHETIC αβ 000\ndeve",
+    "labels": [],
+    "reference_status": null,
+    "gold_provisions": [],
+    "gold_references": []
+  },
+  {
+    "synthetic": true,
+    "language": "pt",
+    "profile_id": "pt-EU-act",
+    "name": "pt_ambiguous",
+    "category": "ambiguous",
+    "text": "Artigo 1.º\ndeve\nArtigo 1.º\nNos termos do artigo 1.º.\n",
+    "labels": [
+      "1",
+      "1"
+    ],
+    "reference_status": "ambiguous",
+    "gold_provisions": [
+      {
+        "label": "1",
+        "start": 0,
+        "end": 16
+      },
+      {
+        "label": "1",
+        "start": 16,
+        "end": 53
+      }
+    ],
+    "gold_references": [
+      {
+        "text": "artigo 1.º",
+        "start": 41,
+        "end": 51,
+        "status": "ambiguous"
+      }
+    ]
+  },
+  {
+    "synthetic": true,
+    "language": "pt",
+    "profile_id": "pt-EU-act",
+    "name": "pt_adversarial",
+    "category": "adversarial",
+    "text": "😀‮Artigo 1.º\ndeve é‏\n",
+    "labels": [],
+    "reference_status": "unknown_scope",
+    "gold_provisions": [],
+    "gold_references": [
+      {
+        "text": "Artigo 1.º",
+        "start": 2,
+        "end": 12,
+        "status": "unknown_scope"
+      }
+    ]
+  }
+]
